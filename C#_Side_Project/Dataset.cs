@@ -101,13 +101,31 @@ namespace Assets.Scripts
         {
             try
             {
-                //Pass the filepath and filename to the StreamWriter Constructor
-                using (StreamWriter writetext = File.AppendText(file_name))
+                if (File.Exists(file_name)){
+                    //Pass the filepath and filename to the StreamWriter Constructor
+                    using (StreamWriter writetext = File.AppendText(file_name))
+                    {
+                        //Write a line of text
+                        writetext.WriteLine(data_to_write);
+                        //Close the file
+                        writetext.Close();
+                    }
+                }
+                else
                 {
-                    //Write a line of text
-                    writetext.WriteLine(data_to_write);
-                    //Close the file
-                    writetext.Close();
+                    using (StreamWriter writetext = new StreamWriter(file_name))
+                    {
+                        string heading = "Id, Hand in Therapy (0 for left 1 for right), Height(cm), " +
+                            "Arm Length, Standing (0 for no 1 for yes), Treatment Time (sec), Bubble in space, Velocity average (Best=1 Worst=0), " +
+                            "Max velocity count (Best=1 Worst=0), Reaching time (Best=0 Worst=1), Path taken (Best=1 Worst=0), Jerkiness (Best=0 Worst=1), " +
+                            "Bubble popped (Best=1 Worst=0), Total Score (Best=100 Worst=0), Bubble Position X, Bubble Position Y, Bubble Position Z, " +
+                            "Bubble size, Distance between bubbles";
+                        //Write a line of text
+                        writetext.WriteLine(heading);
+                        writetext.WriteLine(data_to_write);
+                        //Close the file
+                        writetext.Close();
+                    }
                 }
             }
             catch (Exception e)

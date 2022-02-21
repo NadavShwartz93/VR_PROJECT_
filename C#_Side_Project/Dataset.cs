@@ -90,11 +90,13 @@ namespace Assets.Scripts
 
                 var val = item.Value;
                 for (int i = 0; i < val[0].Count(); i++)
-                    data_to_write += val[0][i] + ",";
+                    data_to_write += val[0][i].ToString("0.00") + ",";
 
 
                 write_To_Csv_File(data_to_write);
             }
+            //Remove all the keys and the values from the dictionary.
+            user_data.Clear();
         }
 
         private void write_To_Csv_File(string data_to_write)
@@ -153,6 +155,29 @@ namespace Assets.Scripts
                     iter.Value[0][i] = count / row_size;
                 }
                 iter.Value.RemoveRange(1, row_size - 1);
+            }
+        }
+
+        public void read_file(string file_to_read)
+        {
+            string[] text = File.ReadAllLines(file_to_read);
+            int flag = 0;
+            foreach (var line in text)
+            {
+                //Don't need the first line from the text.
+                if (flag < 2)
+                    flag++;
+                else
+                {
+
+                    string[] tokens = line.Split(',');
+
+                    new_data_line(Convert.ToSingle(tokens[0]), Convert.ToSingle(tokens[1]), Convert.ToSingle(tokens[2]),
+                        Convert.ToSingle(tokens[3]), Convert.ToSingle(tokens[4]), Convert.ToInt32(tokens[5]),
+                        Convert.ToInt32(tokens[6]), Convert.ToSingle(tokens[7]), Convert.ToSingle(tokens[8]),
+                        Convert.ToSingle(tokens[9]), tokens[10]);
+                    flag++;
+                }
             }
         }
     }

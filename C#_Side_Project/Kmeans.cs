@@ -10,6 +10,7 @@ using System.IO;
 /// </summary>
 class Kmeans
 {
+    public static Kmeans instance = null;
     private int numCentralVec = 0; // m1,m2.... mk
     private float[,] data_mat;
     private string file_to_read = "Dataset.csv";
@@ -24,11 +25,12 @@ class Kmeans
 
         }
     */
-    Dictionary<string, int> BubbleInSpace = new Dictionary<string, int>();
+    Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
     
     //private const string Front-Bottom-Center = 0;
     Kmeans(int number_of_central_vectors)
     {
+        instance = this;
         this.numCentralVec = number_of_central_vectors;
         BubbleInSpace.Add("Front-Bottom-Center", 0);
         BubbleInSpace.Add("Front-Bottom-Right", 1);
@@ -41,9 +43,17 @@ class Kmeans
         BubbleInSpace.Add("Back-Bottom-Left", 8);
         BubbleInSpace.Add("Back-Top-Center", 9);
         BubbleInSpace.Add("Back-Top-Right", 10);
-        BubbleInSpace.Add("Front-Top-Left", 11);
+        BubbleInSpace.Add("Back-Top-Left", 11);
         
         //We must initiali the central vector !
+    }
+    public static Kmeans get_instance()
+    {
+        if (instance == null)
+        {
+            instance = new Kmeans(11);
+        }
+        return instance;
     }
     public void read_file()
     {
@@ -55,11 +65,14 @@ class Kmeans
         {
             //Don't need the first line from the text.
             if (skipLineInDataset < 1)
+            {
+
                 skipLineInDataset++;
+            }
             else
             {
                 string[] tokens = line.Split(',');
-                list.Add(tokens); 
+                list.Add(tokens);
                 /*   new_data_line(Convert.ToSingle(tokens[0]), Convert.ToSingle(tokens[1]), Convert.ToSingle(tokens[2]),
                        Convert.ToSingle(tokens[3]), Convert.ToSingle(tokens[4]), Convert.ToInt32(tokens[5]),
                        Convert.ToInt32(tokens[6]), Convert.ToSingle(tokens[7]), Convert.ToSingle(tokens[8]),
@@ -72,14 +85,14 @@ class Kmeans
         {
             for (int j = 0; j < numberOfColumns; j++)
             {
-                if (elem[j] == "Bubble in space" && BubbleInSpace.ContainsKey(data_mat[i, j].ToString())) //For columns in table -> Bubble in space
+                if (j == 6 && BubbleInSpace.ContainsKey(elem[j])) //For columns in table ->where 6 == Bubble in space
                 {
-                    data_mat[i, j] = BubbleInSpace[data_mat[i, j].ToString()];
+                    data_mat[i, j] = BubbleInSpace[elem[j]];
                 }
-                data_mat[i, j] = float.Parse(elem[j]);
+                else 
+                    data_mat[i, j] = float.Parse(elem[j]);
 
             }
-                //nStr = str.Replace('-','_');
         }
     }
     public void euclidean_distance(float[] v1, float[] v2, int vector_size) { }

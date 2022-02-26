@@ -16,6 +16,8 @@ namespace ConsoleApp
                 (float)0.8, (float)0.4, (float)0.5, "Front-Bottom-Center");
             //dataset.read_file("PatientResults.csv");
             Dataset.get_instance().write_data_to_file();
+            //Kmeans km = new Kmeans(numberColumns);
+            Kmeans.get_instance().read_file();
 
             Console.WriteLine("Process finished!\n");
         }

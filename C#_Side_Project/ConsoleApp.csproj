@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dataset.cs" />
+    <Compile Include="Kmeans.cs" />
     <Compile Include="runner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

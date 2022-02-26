@@ -14,19 +14,40 @@ class Kmeans
     private float[,] data_mat;
     private string file_to_read = "Dataset.csv";
     const int numberOfColumns = 11;
-    enum BubbleInSpace
-    {
-        Front_Bottom_Center,    // 0
-      "vdf"        
-    }
+    /*    enum BubbleInSpace
+        {
+            Front_Bottom_Center,    // 0
+            Front-Bottom-Right,
+            Front-Top-Center,
+            Front-Top-Right,
+            Front-Top-Left,
+
+        }
+    */
+    Dictionary<string, int> BubbleInSpace = new Dictionary<string, int>();
+    
     //private const string Front-Bottom-Center = 0;
     Kmeans(int number_of_central_vectors)
     {
         this.numCentralVec = number_of_central_vectors;
+        BubbleInSpace.Add("Front-Bottom-Center", 0);
+        BubbleInSpace.Add("Front-Bottom-Right", 1);
+        BubbleInSpace.Add("Front-Bottom-Left", 2);
+        BubbleInSpace.Add("Front-Top-Center", 3);
+        BubbleInSpace.Add("Front-Top-Right", 4);
+        BubbleInSpace.Add("Front-Top-Left", 5);
+        BubbleInSpace.Add("Back-Bottom-Center", 6);
+        BubbleInSpace.Add("Back-Bottom-Right", 7);
+        BubbleInSpace.Add("Back-Bottom-Left", 8);
+        BubbleInSpace.Add("Back-Top-Center", 9);
+        BubbleInSpace.Add("Back-Top-Right", 10);
+        BubbleInSpace.Add("Front-Top-Left", 11);
+        
         //We must initiali the central vector !
     }
     public void read_file()
     {
+        
         string[] text = File.ReadAllLines(file_to_read);
         int skipLineInDataset = 0,i = 0;
         List<string[]> list = new List<string[]>();
@@ -49,8 +70,15 @@ class Kmeans
         data_mat = new float[list.Count, numberOfColumns];
         foreach (string[] elem in list)
         {
-            data_mat[i,] = elem;
-            if( i == 6) //  Bubble in space
+            for (int j = 0; j < numberOfColumns; j++)
+            {
+                if (elem[j] == "Bubble in space" && BubbleInSpace.ContainsKey(data_mat[i, j].ToString())) //For columns in table -> Bubble in space
+                {
+                    data_mat[i, j] = BubbleInSpace[data_mat[i, j].ToString()];
+                }
+                data_mat[i, j] = float.Parse(elem[j]);
+
+            }
                 //nStr = str.Replace('-','_');
         }
     }

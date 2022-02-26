@@ -5,3 +5,4 @@
 
 ## `The Project Activity Diagram:`
 ![Activity_Diagram.png](Diagrams/Activity_Diagram.png "Activity Diagram")
+.

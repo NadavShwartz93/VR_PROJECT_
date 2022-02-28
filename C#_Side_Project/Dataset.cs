@@ -21,7 +21,7 @@ public class Dataset /*: MonoBehaviour*/
         user_data = new Dictionary<string, List<float[]>>();
     }
 
-    public static Dataset get_instance()
+    public static Dataset Get_instance()
     {
         if (instance == null)
         {
@@ -30,7 +30,7 @@ public class Dataset /*: MonoBehaviour*/
         return instance;
     }
 
-    public void new_PatientDetailes(string Id, string Hand_in_Therapy,
+    public void New_PatientDetailes(string Id, string Hand_in_Therapy,
      float Height, float Arm_Length, string Standing, float Treatment_Time)
     {
         PatientDetailes[0] = Id;
@@ -41,7 +41,7 @@ public class Dataset /*: MonoBehaviour*/
         PatientDetailes[5] = Treatment_Time.ToString();
     }
 
-    public void new_data_line(float Velocity_average, float Max_velocity_count, float Reaching_time,
+    public void New_data_line(float Velocity_average, float Max_velocity_count, float Reaching_time,
     float Path_taken, float Jerkiness, int Bubble_popped, int Total_Score,
 
     float Bubble_Position_X, float Bubble_Position_Y, float Bubble_Position_Z, string Bubble_in_space)
@@ -74,10 +74,10 @@ public class Dataset /*: MonoBehaviour*/
         }
     }
 
-    public void write_data_to_file()
+    public void Write_data_to_file()
     {
         //make preprocessing for the data:
-        preprocess_data();
+        Preprocess_data();
 
         foreach (var item in user_data)
         {
@@ -91,13 +91,13 @@ public class Dataset /*: MonoBehaviour*/
                 data_to_write += val[0][i].ToString("0.00") + ",";
 
 
-            write_To_Csv_File(data_to_write);
+            Write_To_Csv_File(data_to_write);
         }
         //Remove all the keys and the values from the dictionary.
         user_data.Clear();
     }
 
-    private void write_To_Csv_File(string data_to_write)
+    private void Write_To_Csv_File(string data_to_write)
     {
         try
         {
@@ -135,7 +135,7 @@ public class Dataset /*: MonoBehaviour*/
         }
     }
 
-    private void preprocess_data()
+    private void Preprocess_data()
     {
 
         foreach (var iter in user_data)
@@ -171,7 +171,7 @@ public class Dataset /*: MonoBehaviour*/
 
                 string[] tokens = line.Split(',');
 
-                new_data_line(Convert.ToSingle(tokens[0]), Convert.ToSingle(tokens[1]), Convert.ToSingle(tokens[2]),
+                New_data_line(Convert.ToSingle(tokens[0]), Convert.ToSingle(tokens[1]), Convert.ToSingle(tokens[2]),
                     Convert.ToSingle(tokens[3]), Convert.ToSingle(tokens[4]), Convert.ToInt32(tokens[5]),
                     Convert.ToInt32(tokens[6]), Convert.ToSingle(tokens[7]), Convert.ToSingle(tokens[8]),
                     Convert.ToSingle(tokens[9]), tokens[10]);

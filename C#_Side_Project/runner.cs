@@ -20,6 +20,7 @@ namespace ConsoleApp
             Kmeans.get_instance().read_file();
 
             Console.WriteLine("Process finished!\n");
+            Console.ReadKey();
         }
     }
 }

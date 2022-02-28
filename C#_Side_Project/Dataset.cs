@@ -9,7 +9,7 @@ using System.IO;
 
 public class Dataset /*: MonoBehaviour*/
 {
-    public static Dataset instance = null;
+    private static Dataset instance = null;
     private Dictionary<string, List<float[]>> user_data = new Dictionary<string, List<float[]>>();
     private string[] PatientDetailes = new string[6];
     private const string file_name = "Dataset.csv";

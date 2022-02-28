@@ -44,8 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollaborativeFiltering.cs" />
     <Compile Include="Dataset.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="Kmeans.cs" />
+    <Compile Include="Knn.cs" />
+    <Compile Include="Rmse.cs" />
     <Compile Include="runner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

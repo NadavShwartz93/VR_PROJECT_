@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using ConsoleApp;
 
 /// <summary>
 /// Based on: https://en.wikipedia.org/wiki/K-means_clustering
 /// </summary>
-class Kmeans 
+class Kmeans
 {
     private static Kmeans instance = null;
     private int numCentralVec; // m1,m2.... mk
@@ -19,11 +20,10 @@ class Kmeans
     private Dictionary<int, HashSet<int>> classification = new Dictionary<int, HashSet<int>>();
 
     //Constant variables that we are using in this class.
-    private const string file_to_read = "Dataset.csv";
     private const int numberOfColumns = 17;
     private const int id_column_number = 0;
     private const int bubble_in_space_column_number = 6;
-    
+
     //private const string Front-Bottom-Center = 0;
     private Kmeans(int number_of_central_vectors)
     {
@@ -61,9 +61,9 @@ class Kmeans
     /// </summary>
     public void Read_file()
     {
-       
-        string[] text = File.ReadAllLines(file_to_read);
-        int skipFirstLineInDataset = 0,i = 0;
+
+        string[] text = File.ReadAllLines(Globals.file_name_dataset);
+        int skipFirstLineInDataset = 0, i = 0;
         List<string[]> list = new List<string[]>();
 
         //Save the string array in the List collection.
@@ -81,7 +81,7 @@ class Kmeans
             }
         }
 
-        data_mat = new float[list.Count, numberOfColumns-1];
+        data_mat = new float[list.Count, numberOfColumns - 1];
         foreach (string[] elem in list)
         {
             for (int j = 0; j < numberOfColumns; j++)
@@ -91,13 +91,13 @@ class Kmeans
                     continue;
 
                 //For columns in table ->where 6 == Bubble in space
-                if (j == bubble_in_space_column_number && BubbleInSpace.ContainsKey(elem[j])) 
+                if (j == bubble_in_space_column_number && BubbleInSpace.ContainsKey(elem[j]))
                 {
-                    data_mat[i, j-1] = BubbleInSpace[elem[j]];
+                    data_mat[i, j - 1] = BubbleInSpace[elem[j]];
                 }
 
-                else 
-                    data_mat[i, j-1] = float.Parse(elem[j]);
+                else
+                    data_mat[i, j - 1] = float.Parse(elem[j]);
 
             }
             i++;
@@ -132,18 +132,18 @@ class Kmeans
     /// </summary>
     private void Initialize_BubbleInSpace_dictionary()
     {
-        BubbleInSpace.Add("Front-Bottom-Center", 0);
-        BubbleInSpace.Add("Front-Bottom-Right", 1);
-        BubbleInSpace.Add("Front-Bottom-Left", 2);
-        BubbleInSpace.Add("Front-Top-Center", 3);
-        BubbleInSpace.Add("Front-Top-Right", 4);
-        BubbleInSpace.Add("Front-Top-Left", 5);
-        BubbleInSpace.Add("Back-Bottom-Center", 6);
-        BubbleInSpace.Add("Back-Bottom-Right", 7);
-        BubbleInSpace.Add("Back-Bottom-Left", 8);
-        BubbleInSpace.Add("Back-Top-Center", 9);
-        BubbleInSpace.Add("Back-Top-Right", 10);
-        BubbleInSpace.Add("Back-Top-Left", 11);
+        BubbleInSpace.Add(Globals.FBCInSpace, 0);
+        BubbleInSpace.Add(Globals.FBRInSpace, 1);
+        BubbleInSpace.Add(Globals.FBLInSpace, 2);
+        BubbleInSpace.Add(Globals.FTCInSpace, 3);
+        BubbleInSpace.Add(Globals.FTRInSpace, 4);
+        BubbleInSpace.Add(Globals.FTLInSpace, 5);
+        BubbleInSpace.Add(Globals.BBCInSpace, 6);
+        BubbleInSpace.Add(Globals.BBRInSpace, 7);
+        BubbleInSpace.Add(Globals.BBLInSpace, 8);
+        BubbleInSpace.Add(Globals.BTCInSpace, 9);
+        BubbleInSpace.Add(Globals.BTRInSpace, 10);
+        BubbleInSpace.Add(Globals.BTLInSpace, 11);
     }
 
 
@@ -184,7 +184,7 @@ class Kmeans
                             num = rnd.Next(0, 1);
                             break;
                         }
-                    case bubble_in_space_column_number-1:
+                    case bubble_in_space_column_number - 1:
                         {
                             num = rnd.Next(0, 11);
                             break;
@@ -216,8 +216,9 @@ class Kmeans
     /// <summary>
     /// This method represent the assignment step in the Kmeans algorithm.
     /// </summary>
-    public void Assignment_step() {
-        int row_size =  data_mat.GetLength(0);
+    public void Assignment_step()
+    {
+        int row_size = data_mat.GetLength(0);
         int col_size = data_mat.GetLength(1);
         int center_vec_index;
 
@@ -266,7 +267,8 @@ class Kmeans
     /// <summary>
     /// This method represent the update step in the Kmeans algorithm.
     /// </summary>
-    public void Update_step() {
+    public void Update_step()
+    {
 
         for (int i = 0; i < num_of_central_vectors; i++)
         {

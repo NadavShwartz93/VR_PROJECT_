@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 //using UnityEngine;
 using System.IO;
+using ConsoleApp;
 
 
 public class Dataset /*: MonoBehaviour*/
@@ -12,7 +13,6 @@ public class Dataset /*: MonoBehaviour*/
     private static Dataset instance = null;
     private Dictionary<string, List<float[]>> user_data = new Dictionary<string, List<float[]>>();
     private string[] PatientDetailes = new string[6];
-    private const string file_name = "Dataset.csv";
 
     private Dataset()
     {
@@ -101,10 +101,10 @@ public class Dataset /*: MonoBehaviour*/
     {
         try
         {
-            if (File.Exists(file_name))
+            if (File.Exists(Globals.file_name_dataset))
             {
                 //Pass the filepath and filename to the StreamWriter Constructor
-                using (StreamWriter writetext = File.AppendText(file_name))
+                using (StreamWriter writetext = File.AppendText(Globals.file_name_dataset))
                 {
                     //Write a line of text
                     writetext.WriteLine(data_to_write);
@@ -114,7 +114,7 @@ public class Dataset /*: MonoBehaviour*/
             }
             else
             {
-                using (StreamWriter writetext = new StreamWriter(file_name))
+                using (StreamWriter writetext = new StreamWriter(Globals.file_name_dataset))
                 {
                     string heading = "Id, Hand in Therapy (0 for left 1 for right), Height(cm), " +
                         "Arm Length, Standing (0 for no 1 for yes), Treatment Time (sec), Bubble in space, Velocity average (Best=1 Worst=0), " +

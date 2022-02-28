@@ -46,7 +46,7 @@ class Kmeans
     /// this method return instance of Kmeans class.
     /// </summary>
     /// <returns></returns>
-    public static Kmeans get_instance()
+    public static Kmeans Get_instance()
     {
         if (instance == null)
         {
@@ -59,7 +59,7 @@ class Kmeans
     /// This method read the Dataset.csv file, 
     /// and save the data inside data_mat of 2D float array.
     /// </summary>
-    public void read_file()
+    public void Read_file()
     {
        
         string[] text = File.ReadAllLines(file_to_read);
@@ -247,10 +247,32 @@ class Kmeans
 
     }
 
+
+    private void Update_central_vectors(int key_number)
+    {
+        int col_size = central_vectors.GetLength(1);
+        for (int i = 0; i < col_size; i++)
+        {
+            float cnt = 0;
+            foreach (var v_num in classification[key_number])
+            {
+                cnt += data_mat[v_num, i];
+            }
+            central_vectors[key_number, i] = cnt / classification[key_number].Count;
+        }
+    }
+
+
     /// <summary>
     /// This method represent the update step in the Kmeans algorithm.
     /// </summary>
-    public void Update_step() { }
+    public void Update_step() {
 
+        for (int i = 0; i < num_of_central_vectors; i++)
+        {
+            Update_central_vectors(i);
+        }
+
+    }
 }
 

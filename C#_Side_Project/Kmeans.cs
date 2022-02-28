@@ -11,24 +11,18 @@ using System.IO;
 class Kmeans
 {
     public static Kmeans instance = null;
-    private int numCentralVec = 0; // m1,m2.... mk
+    private int numCentralVec; // m1,m2.... mk
     private float[,] data_mat;
-    private string file_to_read = "Dataset.csv";
-    const int numberOfColumns = 11;
-    /*    enum BubbleInSpace
-        {
-            Front_Bottom_Center,    // 0
-            Front-Bottom-Right,
-            Front-Top-Center,
-            Front-Top-Right,
-            Front-Top-Left,
+    private Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
 
-        }
-    */
-    Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
+    //Constant variables that we are using in this class.
+    private const string file_to_read = "Dataset.csv";
+    private const int numberOfColumns = 17;
+    private const int id_column_number = 0;
+    private const int bubble_in_space_column_number = 6;
     
     //private const string Front-Bottom-Center = 0;
-    Kmeans(int number_of_central_vectors)
+    private Kmeans(int number_of_central_vectors)
     {
         instance = this;
         this.numCentralVec = number_of_central_vectors;
@@ -47,6 +41,12 @@ class Kmeans
         
         //We must initiali the central vector !
     }
+
+    /// <summary>
+    /// Kmeans is a Singleton class, 
+    /// this method return instance of Kmeans class.
+    /// </summary>
+    /// <returns></returns>
     public static Kmeans get_instance()
     {
         if (instance == null)
@@ -55,52 +55,81 @@ class Kmeans
         }
         return instance;
     }
+
+    /// <summary>
+    /// This method read the Dataset.csv file, 
+    /// and save the data inside data_mat of 2D float array.
+    /// </summary>
     public void read_file()
     {
-        
+       
         string[] text = File.ReadAllLines(file_to_read);
-        int skipLineInDataset = 0,i = 0;
+        int skipFirstLineInDataset = 0,i = 0;
         List<string[]> list = new List<string[]>();
+
+        //Save the string array in the List collection.
         foreach (var line in text)
         {
-            //Don't need the first line from the text.
-            if (skipLineInDataset < 1)
+            //Don't need the first line from the dataset.
+            if (skipFirstLineInDataset < 1)
             {
-
-                skipLineInDataset++;
+                skipFirstLineInDataset++;
             }
             else
             {
                 string[] tokens = line.Split(',');
                 list.Add(tokens);
-                /*   new_data_line(Convert.ToSingle(tokens[0]), Convert.ToSingle(tokens[1]), Convert.ToSingle(tokens[2]),
-                       Convert.ToSingle(tokens[3]), Convert.ToSingle(tokens[4]), Convert.ToInt32(tokens[5]),
-                       Convert.ToInt32(tokens[6]), Convert.ToSingle(tokens[7]), Convert.ToSingle(tokens[8]),
-                       Convert.ToSingle(tokens[9]), tokens[10]);*/
-                skipLineInDataset++;
             }
         }
-        data_mat = new float[list.Count, numberOfColumns];
+
+        data_mat = new float[list.Count, numberOfColumns-1];
         foreach (string[] elem in list)
         {
             for (int j = 0; j < numberOfColumns; j++)
             {
-                if (j == 6 && BubbleInSpace.ContainsKey(elem[j])) //For columns in table ->where 6 == Bubble in space
+
+                if (j == id_column_number)
+                    continue;
+
+                //For columns in table ->where 6 == Bubble in space
+                if (j == bubble_in_space_column_number && BubbleInSpace.ContainsKey(elem[j])) 
                 {
-                    data_mat[i, j] = BubbleInSpace[elem[j]];
+                    data_mat[i, j-1] = BubbleInSpace[elem[j]];
                 }
+
                 else 
-                    data_mat[i, j] = float.Parse(elem[j]);
+                    data_mat[i, j-1] = float.Parse(elem[j]);
 
             }
+            i++;
         }
     }
-    public void euclidean_distance(float[] v1, float[] v2, int vector_size) { }
+
+    /// <summary>
+    /// This method calculate the euclidean distance of two given vectors.
+    /// </summary>
+    /// <param name="v1">The first vector.</param>
+    /// <param name="v2">The second vector.</param>
+    /// <param name="vector_size"></param>
+    /// <returns>The euclidean distance of the two vectors</returns>
+    private float euclidean_distance(float[] v1, float[] v2, int vector_size) {
+        float count = 0;
+        const double power = 2;
+
+        for (int i = 0; i < vector_size; i++)
+        {
+            float temp = (float)Math.Pow((v1[i] - v2[i]), power);
+            count += temp;
+        }
+
+        return (float)Math.Sqrt(count);
+    }
+
 
     public void assignment_step() { }
+
+
     public void update_step() { }
-
-
 
 }
 

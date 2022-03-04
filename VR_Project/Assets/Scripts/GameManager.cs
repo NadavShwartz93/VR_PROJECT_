@@ -33,13 +33,13 @@ public class GameManager : MonoBehaviour
     public float sumOfVelocities = 0;
     public float prevSessionVelocityAvg = 1;
 
-    public float prevSessionJerkAvg=1;
+    public float prevSessionJerkAvg = 1;
 
-    public float sumOfJerks=0;
+    public float sumOfJerks = 0;
     public bool gameStarted = false;
     public GameObject currentBubble;
     public Bubble lastBubble;
- 
+
 
     int movementMultiplyier = 1;
     public int leftBoundry, rightBoundry, upBoundry, downBoundry, forwardBoundry, backBoundry;
@@ -163,6 +163,9 @@ public class GameManager : MonoBehaviour
         DataManager.instance.data.prevSessionVelocityAverage = bubbleInSessionCount > 0 ? sumOfVelocities / bubbleInSessionCount : 1;
         DataManager.instance.data.prevSessionJerkAvg = bubbleInSessionCount > 0 ? sumOfJerks / bubbleInSessionCount : 10;
 
+        //Added new command
+        Dataset.get_instance().new_PatientDetailes(current_player.id, current_player.hand_in_therapy, current_player.height, current_player.arm_length,
+            "yes", treatmentTime);
     }
 
     #region Static Methods
@@ -179,19 +182,19 @@ public class GameManager : MonoBehaviour
         if (current_player.hand_in_therapy.Equals("right"))
         {
             // rightBoundry = 2 * current_player.N - 1;
-            rightBoundry=(int)((2*current_player.N-1)*(7.0f/8.0f));
+            rightBoundry = (int)((2 * current_player.N - 1) * (7.0f / 8.0f));
             leftBoundry = (int)(2 * current_player.N / 4.0f) - 1;
         }
         else
         {
             rightBoundry = (int)(3 * current_player.N / 2f) - 1;
-            leftBoundry = (int)((2*current_player.N-1)*(3.0f/16.0f));
+            leftBoundry = (int)((2 * current_player.N - 1) * (3.0f / 16.0f));
         }
 
         upBoundry = 3 * current_player.N / 2 - 1;
         downBoundry = 2 * current_player.N / 8 - 1;
 
-        forwardBoundry = (int)((current_player.N - 1) *(7/8.0f));
+        forwardBoundry = (int)((current_player.N - 1) * (7 / 8.0f));
         backBoundry = current_player.N / 2;
 
         movementMultiplyier = 1;
@@ -380,14 +383,16 @@ public class GameManager : MonoBehaviour
         int bubbleScore = currBubble.totalScore;
 
         isPopBubble = isPop;
-        
-        if (iterationsCounter > learnThreshold && iterationsCounter<=smartChoiseThreshold)
+
+        if (iterationsCounter > learnThreshold && iterationsCounter <= smartChoiseThreshold)
         {
             learningRate = 0.6f;
             randomExplore = 0.4f;
-        }else if(iterationsCounter>smartChoiseThreshold){
+        }
+        else if (iterationsCounter > smartChoiseThreshold)
+        {
             learningRate = 0.2f;
-            randomExplore=0.1f;
+            randomExplore = 0.1f;
         }
 
         /*update details about the last apperance of the bubble*/

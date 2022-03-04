@@ -13,6 +13,10 @@ public class EndGame : MonoBehaviour
         GameManager.instance.SaveData();
         DataManager.instance.Save(GameManager.instance.current_player.id+".txt");
 
+        //Added 2 new commands
+        Debug.Log("Write to the Dataset.csv");
+        Dataset.get_instance().write_data_to_file();
+
         //System.IO.File.WriteAllText("C:\\Users\\bkorkos\\Desktop\\WriteLines1.txt", json);
 
         Debug.Log("end finish");

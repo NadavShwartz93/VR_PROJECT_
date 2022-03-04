@@ -16,7 +16,7 @@ class Kmeans
     private float[,] data_mat;
     private Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
     private float[,] central_vectors;
-    private const int num_of_central_vectors = 4;
+    private const int num_of_classes = 4; // number of classs
     private Dictionary<int, HashSet<int>> classification = new Dictionary<int, HashSet<int>>();
 
     //Constant variables that we are using in this class.
@@ -98,7 +98,6 @@ class Kmeans
 
                 else
                     data_mat[i, j - 1] = float.Parse(elem[j]);
-
             }
             i++;
         }
@@ -152,7 +151,7 @@ class Kmeans
     /// </summary>
     private void Initialize_classification_dictionary()
     {
-        for (int i = 0; i < num_of_central_vectors; i++)
+        for (int i = 0; i < num_of_classes; i++)
         {
             classification.Add(i, new HashSet<int>());
         }
@@ -165,7 +164,7 @@ class Kmeans
     private void Initialize_central_vectors()
     {
         //Local variables.
-        const int row_size = num_of_central_vectors;
+        const int row_size = num_of_classes;
         const int col_size = numberOfColumns - 1;
 
         central_vectors = new float[row_size, col_size];
@@ -206,7 +205,7 @@ class Kmeans
     /// <param name="vector_num"></param>
     private void Remove_item(int Key_to_stay, int vector_num)
     {
-        for (int i = 0; i < num_of_central_vectors; i++)
+        for (int i = 0; i < num_of_classes; i++)
         {
             if (i != Key_to_stay && classification[i].Contains(vector_num))
                 classification[i].Remove(vector_num);
@@ -270,7 +269,7 @@ class Kmeans
     public void Update_step()
     {
 
-        for (int i = 0; i < num_of_central_vectors; i++)
+        for (int i = 0; i < num_of_classes; i++)
         {
             Update_central_vectors(i);
         }

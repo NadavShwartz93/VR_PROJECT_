@@ -16,7 +16,7 @@ namespace Project_gui
         private static Patient_Detailes P_D= null;
         private static Game_Settings1 gs1 = null;
 
-        // This string will hold the Patient Detailes.
+        // This string will hold the Patient Details.
         private static string Patient_data = null;
 
         // Boolean flag used to determine that number is entered. 
@@ -71,7 +71,7 @@ namespace Project_gui
             return Patient_data;
         }
 
-        // Return instance of this class, and create an instantion if needed.
+        // Return instance of this class, and create an instance if needed.
         public static Patient_Detailes get_Instance()
         {
             if (P_D == null)

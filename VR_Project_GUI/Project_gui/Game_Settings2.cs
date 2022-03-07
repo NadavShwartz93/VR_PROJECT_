@@ -13,8 +13,8 @@ namespace Project_gui
 {
     public partial class Game_Settings2 : Form
     {
-        private string file_Name_Data = "PatientResults.csv";
-        private string file_Name_Patient_Detailes = "PatientDetailes.csv";
+        private string Patient_Results_File_Name = Globals.file_name_Patient_Results;
+        private string Patient_Detailes_File_Name = Globals.file_Name_Patient_Detailes;
 
         public Game_Settings2()
         {
@@ -44,8 +44,8 @@ namespace Project_gui
         // Approve Game Settings
         private void click_approve_button(object sender, EventArgs e)
         {
-            //Write the Patient Detailes to PatientDetailes.csv 
-            write_To_Csv_File(Patient_Detailes.get_Data(), file_Name_Patient_Detailes);
+            //Write the Patient Details to PatientDetails.csv 
+            write_To_Csv_File(Patient_Detailes.get_Data(), Patient_Detailes_File_Name);
 
             //Close the open forms.
             close_all_WinForm();
@@ -79,7 +79,7 @@ namespace Project_gui
             try
             {
                 //Pass the file path and file name to the StreamReader constructor
-                StreamReader sr = new StreamReader(file_Name_Data);
+                StreamReader sr = new StreamReader(Patient_Results_File_Name);
                 //Read the first line of text
                 line = sr.ReadLine();
                 //Continue to read until you reach end of file
@@ -108,7 +108,7 @@ namespace Project_gui
         {
             try
             {
-                //Pass the filepath and filename to the StreamWriter Constructor
+                //Pass the file path and filename to the StreamWriter Constructor
                 using(StreamWriter writetext = new StreamWriter(fileName)){
                     //Write a line of text
                     writetext.WriteLine(data_to_write);

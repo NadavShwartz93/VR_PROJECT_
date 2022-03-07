@@ -287,10 +287,10 @@ namespace Project_gui
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label2.Font = new System.Drawing.Font("Arial", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(105, 51);
-            this.label2.Margin = new System.Windows.Forms.Padding(100, 3, 6, 3);
+            this.label2.Location = new System.Drawing.Point(87, 51);
+            this.label2.Margin = new System.Windows.Forms.Padding(20, 3, 6, 3);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(119, 40);
+            this.label2.Size = new System.Drawing.Size(75, 40);
             this.label2.TabIndex = 2;
             this.label2.Text = "Hand";
             // 
@@ -298,21 +298,22 @@ namespace Project_gui
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label3.Font = new System.Drawing.Font("Arial", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(105, 98);
-            this.label3.Margin = new System.Windows.Forms.Padding(100, 3, 6, 3);
+            this.label3.Location = new System.Drawing.Point(81, 98);
+            this.label3.Margin = new System.Windows.Forms.Padding(80, 3, 6, 3);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(119, 40);
+            this.label3.Size = new System.Drawing.Size(147, 40);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Size";
+            this.label3.Text = "Bubble Size";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label4
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label4.Font = new System.Drawing.Font("Arial", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(105, 145);
-            this.label4.Margin = new System.Windows.Forms.Padding(100, 3, 6, 3);
+            this.label4.Location = new System.Drawing.Point(79, 145);
+            this.label4.Margin = new System.Windows.Forms.Padding(0, 3, 6, 3);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(119, 40);
+            this.label4.Size = new System.Drawing.Size(70, 40);
             this.label4.TabIndex = 4;
             this.label4.Text = "Time";
             // 
@@ -320,8 +321,8 @@ namespace Project_gui
             // 
             this.label5.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label5.Font = new System.Drawing.Font("Arial", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(105, 196);
-            this.label5.Margin = new System.Windows.Forms.Padding(100, 3, 6, 3);
+            this.label5.Location = new System.Drawing.Point(80, 196);
+            this.label5.Margin = new System.Windows.Forms.Padding(50, 3, 6, 3);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(119, 40);
             this.label5.TabIndex = 5;

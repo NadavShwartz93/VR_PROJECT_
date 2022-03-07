@@ -114,5 +114,9 @@ namespace Project_gui
                 hand_Lable.Text = "R";
         }
 
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

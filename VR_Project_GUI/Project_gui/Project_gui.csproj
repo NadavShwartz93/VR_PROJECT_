@@ -76,6 +76,7 @@
     <Compile Include="Game_Settings1.Designer.cs">
       <DependentUpon>Game_Settings1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Globals.cs" />
     <Compile Include="Patient_Detailes.cs">
       <SubType>Form</SubType>
     </Compile>

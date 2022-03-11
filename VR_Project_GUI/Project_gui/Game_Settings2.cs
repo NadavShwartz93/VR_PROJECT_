@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Project_gui
 {
@@ -44,15 +37,17 @@ namespace Project_gui
         // Approve Game Settings
         private void click_approve_button(object sender, EventArgs e)
         {
-            //Write the Patient Details to PatientDetails.csv 
-            write_To_Csv_File(Patient_Detailes.get_Data(), Patient_Detailes_File_Name);
+            if (Validation.isPathExist())
+            {
+                //Write the Patient Details to PatientDetails.csv 
+                write_To_Csv_File(Patient_Detailes.get_Data(), Patient_Detailes_File_Name);
 
-            //Close the open forms.
-            close_all_WinForm();
+                //Close the open forms.
+                close_all_WinForm();
 
-            //Game_Settings1 GUI don't close with close_all_WinForm() so I close it.
-            Game_Settings1.get_Instance().Close();
-
+                //Game_Settings1 GUI don't close with close_all_WinForm() so I close it.
+                Game_Settings1.get_Instance().Close();
+            }
         }
 
         // This method close all the open form in the application.
@@ -69,7 +64,7 @@ namespace Project_gui
         {
             this.Visible = false;
             Game_Settings1.get_Instance().Visible = true;
-            
+
         }
 
 
@@ -106,24 +101,28 @@ namespace Project_gui
         }
         private void write_To_Csv_File(string data_to_write, string fileName)
         {
-            try
-            {
-                //Pass the file path and filename to the StreamWriter Constructor
-                using(StreamWriter writetext = new StreamWriter(fileName)){
-                    //Write a line of text
-                    writetext.WriteLine(data_to_write);
-                    //Close the file
-                    writetext.Close();
+            string fileToWrite = Path.Combine(Globals.path, fileName);
+           
+                try
+                {
+                    //Pass the file path and filename to the StreamWriter Constructor
+                    using (StreamWriter writetext = new StreamWriter(fileToWrite))
+                    {
+                        //Write a line of text
+                        writetext.WriteLine(data_to_write);
+                        //Close the file
+                        writetext.Close();
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception: " + e.Message);
-            }
-            finally
-            {
-                Console.WriteLine("Executing finally block.");
-            }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception: " + e.Message);
+                }
+                finally
+                {
+                    Console.WriteLine("Executing finally block.");
+                }
+            
         }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)

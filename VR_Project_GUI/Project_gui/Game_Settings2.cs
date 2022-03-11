@@ -37,8 +37,10 @@ namespace Project_gui
         // Approve Game Settings
         private void click_approve_button(object sender, EventArgs e)
         {
-            if (Validation.isPathExist())
+            /*if (!Validation.isPathExist())
             {
+                return;
+            }*/
                 //Write the Patient Details to PatientDetails.csv 
                 write_To_Csv_File(Patient_Detailes.get_Data(), Patient_Detailes_File_Name);
 
@@ -47,7 +49,7 @@ namespace Project_gui
 
                 //Game_Settings1 GUI don't close with close_all_WinForm() so I close it.
                 Game_Settings1.get_Instance().Close();
-            }
+            
         }
 
         // This method close all the open form in the application.

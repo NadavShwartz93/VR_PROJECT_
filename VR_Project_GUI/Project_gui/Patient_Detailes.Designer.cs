@@ -49,6 +49,8 @@ namespace Project_gui
             this.continue_Button = new System.Windows.Forms.Button();
             this.Standing_CheckBox = new System.Windows.Forms.CheckBox();
             this.Hand_CheckBox = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -282,11 +284,32 @@ namespace Project_gui
             this.Hand_CheckBox.UseVisualStyleBackColor = true;
             this.Hand_CheckBox.CheckedChanged += new System.EventHandler(this.Hand_CheckedChanged);
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.Color.Red;
+            this.label6.Location = new System.Drawing.Point(669, 38);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(103, 16);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "33% completed";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(672, 12);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(100, 23);
+            this.progressBar1.TabIndex = 8;
+            this.progressBar1.Value = 33;
+            // 
             // Patient_Detailes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 411);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.Hand_CheckBox);
             this.Controls.Add(this.Standing_CheckBox);
             this.Controls.Add(this.continue_Button);
@@ -325,5 +348,7 @@ namespace Project_gui
         private System.Windows.Forms.Label First_Name_label;
         private System.Windows.Forms.CheckBox Standing_CheckBox;
         private System.Windows.Forms.CheckBox Hand_CheckBox;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

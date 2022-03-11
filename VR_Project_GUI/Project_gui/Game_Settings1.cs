@@ -58,20 +58,14 @@ namespace Project_gui
             return gs1;
         }
 
-        private void Moti_Click(object sender, EventArgs e)
-        {
 
-        }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
         {
 
         }
 
-        private void label7_Click(object sender, EventArgs e)
-        {
 
-        }
 
         private void Game_Settings1_Load(object sender, EventArgs e)
         {
@@ -86,13 +80,7 @@ namespace Project_gui
             distance_Label.Text = distance_Track_Bar.Value.ToString();
         }
 
-        /*
-         Change the value of the time Label Text according to the time TrackBar value.
-         */
-        private void time_Scroll_Bar(object sender, EventArgs e)
-        {
-            time_Label.Text = time_Track_Bar.Value.ToString(); 
-        }
+
 
         /*
          Change the value of the size Label Text according to the size TrackBar value.
@@ -102,19 +90,11 @@ namespace Project_gui
             size_Label.Text = size_Track_Bar.Value.ToString();
         }
 
+ 
         /*
          Change the value of the hand Label Text according to the hand TrackBar value.
          */
-        private void hand_Scroll_Bar(object sender, EventArgs e)
-        {
-            int value = hand_Track_Bar.Value;
-            if (value == 0)
-                hand_Lable.Text = "L";
-            else
-                hand_Lable.Text = "R";
-        }
-
-        private void label3_Click(object sender, EventArgs e)
+         private void label3_Click(object sender, EventArgs e)
         {
 
         }

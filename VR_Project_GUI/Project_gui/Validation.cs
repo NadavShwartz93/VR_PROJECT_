@@ -10,6 +10,7 @@ namespace Project_gui
 {
     public class Validation
     {
+        //Check if path exist
         public static bool isPathExist(string path = Globals.path)
         {
             if (!Directory.Exists(path))

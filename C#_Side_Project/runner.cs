@@ -17,8 +17,7 @@ namespace ConsoleApp
             //dataset.read_file("PatientResults.csv");
             Dataset.Get_instance().Write_data_to_file();
             //Kmeans km = new Kmeans(numberColumns);
-            Kmeans.Get_instance().Read_file();
-
+            Kmeans.Get_instance().Read_file_to_array();
             Console.WriteLine("Process finished!\n");
             KNN.Get_instance().start();
             Console.ReadKey();

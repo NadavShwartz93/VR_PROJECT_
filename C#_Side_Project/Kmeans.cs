@@ -16,7 +16,7 @@ class Kmeans
     private float[,] data_mat;
     private Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
     private float[,] central_vectors;
-    private const int num_of_classes = 4; // number of classs
+    private const int num_of_classes = 3; // number of clusters
     private Dictionary<int, HashSet<int>> classification = new Dictionary<int, HashSet<int>>();
 
     //Constant variables that we are using in this class.
@@ -59,11 +59,18 @@ class Kmeans
     /// This method read the Dataset.csv file, 
     /// and save the data inside data_mat of 2D float array.
     /// </summary>
-    public void Read_file()
+    public void Read_file_to_array()
     {
+        List<string[]> list = ReadLines(Globals.file_name_dataset);
+        
+        data_mat = new float[list.Count, numberOfColumns - 1];
+        ParsingStringToFloat(list, data_mat);
+    }
 
-        string[] text = File.ReadAllLines(Globals.file_name_dataset);
-        int skipFirstLineInDataset = 0, i = 0;
+    private List<string[]> ReadLines(string fileName)
+    {
+        string[] text = File.ReadAllLines(fileName);
+        int skipFirstLineInDataset = 0;
         List<string[]> list = new List<string[]>();
 
         //Save the string array in the List collection.
@@ -80,8 +87,12 @@ class Kmeans
                 list.Add(tokens);
             }
         }
+        return list;
+    }
 
-        data_mat = new float[list.Count, numberOfColumns - 1];
+    private void ParsingStringToFloat( List<string[]> list, float[,] mtx)
+    {
+        int i = 0;
         foreach (string[] elem in list)
         {
             for (int j = 0; j < numberOfColumns; j++)
@@ -93,14 +104,15 @@ class Kmeans
                 //For columns in table ->where 6 == Bubble in space
                 if (j == bubble_in_space_column_number && BubbleInSpace.ContainsKey(elem[j]))
                 {
-                    data_mat[i, j - 1] = BubbleInSpace[elem[j]];
+                    mtx[i, j - 1] = BubbleInSpace[elem[j]];
                 }
 
                 else
-                    data_mat[i, j - 1] = float.Parse(elem[j]);
+                    mtx[i, j - 1] = float.Parse(elem[j]);
             }
             i++;
         }
+
     }
 
 
@@ -166,35 +178,9 @@ class Kmeans
         //Local variables.
         const int row_size = num_of_classes;
         const int col_size = numberOfColumns - 1;
-
+        var list = ReadLines(Globals.CentralVectorsKmeans_dataset);
         central_vectors = new float[row_size, col_size];
-        Random rnd = new Random();
-
-        for (int i = 0; i < row_size; i++)
-        {
-            for (int j = 0; j < col_size; j++)
-            {
-                float num;
-                switch (j)
-                {
-                    case 0:
-                    case 11:
-                        {
-                            num = rnd.Next(0, 1);
-                            break;
-                        }
-                    case bubble_in_space_column_number - 1:
-                        {
-                            num = rnd.Next(0, 11);
-                            break;
-                        }
-                    default:
-                        num = 0;
-                        break;
-                }
-                central_vectors[i, j] = num;
-            }
-        }
+        ParsingStringToFloat(list,central_vectors);
     }
 
     /// <summary>
@@ -266,14 +252,54 @@ class Kmeans
     /// <summary>
     /// This method represent the update step in the Kmeans algorithm.
     /// </summary>
-    public void Update_step()
+    private void Update_step()
     {
 
         for (int i = 0; i < num_of_classes; i++)
         {
             Update_central_vectors(i);
         }
+    }
+    public void Train(int numOfIteration)
+    {
+        for(int i = 0; i < numOfIteration; i++)
+        {
+            Assignment_step();
+            Update_step();
+        }
 
     }
+
+    private void Write_To_Csv_File()
+    {
+        string path = Globals.CentralVectorsKmeans_dataset;
+        try
+        {
+            //Pass the file-path and filename to the StreamWriter Constructor
+            using (StreamWriter writetext = new StreamWriter(path, true))
+            {
+
+                //Write a line of text
+                for (int i = 0; i < central_vectors.GetLength(0); i++)
+                {
+                    string data_to_write = string.Join(",", GetRow(central_vectors, i));
+                    writetext.WriteLine(data_to_write);
+                    
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Exception: " + e.Message);
+        }
+
+    }
+    public float[] GetRow(float[,] matrix, int rowNumber)
+    {
+        return Enumerable.Range(0, matrix.GetLength(1))
+                .Select(x => matrix[rowNumber, x])
+                .ToArray();
+    }
+
 }
 

@@ -10,6 +10,7 @@ namespace ConsoleApp
     public class Globals
     {
         public const string file_name_dataset = "Dataset.csv";
+        public const string CentralVectorsKmeans_dataset = "CentralVectorsKmeans.csv";
 
         ////// The area that the bubbles can show up//////////
         public const string FBCInSpace = "Front-Bottom-Center";

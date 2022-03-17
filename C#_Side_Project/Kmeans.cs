@@ -38,6 +38,9 @@ class Kmeans
 
         //Initialize the classification Dictionary.
         this.Initialize_classification_dictionary();
+
+        //Read all the data from Dataset.csv and save to data_mat 2D array.
+        this.Read_file_to_array();
     }
 
 
@@ -59,16 +62,18 @@ class Kmeans
     /// This method read the Dataset.csv file, 
     /// and save the data inside data_mat of 2D float array.
     /// </summary>
-    public void Read_file_to_array()
+    private void Read_file_to_array()
     {
         List<string[]> list = ReadLines(Globals.file_name_dataset);
-        
+
         data_mat = new float[list.Count, numberOfColumns - 1];
+
         ParsingStringToFloat(list, data_mat);
     }
 
     private List<string[]> ReadLines(string fileName)
     {
+
         string[] text = File.ReadAllLines(fileName);
         int skipFirstLineInDataset = 0;
         List<string[]> list = new List<string[]>();
@@ -90,7 +95,7 @@ class Kmeans
         return list;
     }
 
-    private void ParsingStringToFloat( List<string[]> list, float[,] mtx)
+    private void ParsingStringToFloat(List<string[]> list, float[,] mtx)
     {
         int i = 0;
         foreach (string[] elem in list)
@@ -120,17 +125,17 @@ class Kmeans
     /// This method calculate the euclidean distance of two given vectors.
     /// </summary>
     /// <param name="row_num1"></param>
-    /// <param name="row_num2"></param>
+    /// <param name="central_vectors_row_num"></param>
     /// <param name="vector_size"></param>
     /// <returns>The euclidean distance of the two vectors.</returns>
-    private float Euclidean_distance(int row_num1, int row_num2, int vector_size)
+    private float Euclidean_distance(int row_num1, int central_vectors_row_num, int vector_size)
     {
         float count = 0;
         const double power = 2;
 
         for (int i = 0; i < vector_size; i++)
         {
-            float temp = (float)Math.Pow(data_mat[row_num1, i] - central_vectors[row_num1, i], power);
+            float temp = (float)Math.Pow(data_mat[row_num1, i] - central_vectors[central_vectors_row_num, i], power);
             count += temp;
         }
 
@@ -180,7 +185,7 @@ class Kmeans
         const int col_size = numberOfColumns - 1;
         var list = ReadLines(Globals.CentralVectorsKmeans_dataset);
         central_vectors = new float[row_size, col_size];
-        ParsingStringToFloat(list,central_vectors);
+        ParsingStringToFloat(list, central_vectors);
     }
 
     /// <summary>
@@ -201,7 +206,7 @@ class Kmeans
     /// <summary>
     /// This method represent the assignment step in the Kmeans algorithm.
     /// </summary>
-    public void Assignment_step()
+    private void Assignment_step()
     {
         int row_size = data_mat.GetLength(0);
         int col_size = data_mat.GetLength(1);
@@ -209,8 +214,8 @@ class Kmeans
 
         for (int vector_num = 0; vector_num < row_size; vector_num++)
         {
-            float minimum_value = Euclidean_distance(vector_num, 0, col_size);
             center_vec_index = 0;
+            float minimum_value = Euclidean_distance(vector_num, center_vec_index, col_size);
 
             //Find the closest central vector to the vector_num.
             for (int j = 1; j < central_vectors.GetLength(0); j++)
@@ -244,7 +249,14 @@ class Kmeans
             {
                 cnt += data_mat[v_num, i];
             }
-            central_vectors[key_number, i] = cnt / classification[key_number].Count;
+
+            float res = cnt / classification[key_number].Count;
+            if (float.IsNaN(res)) {
+                string msg = "res is Nan the reason: \nThere is a duplicates values in the Dataset.csv. " +
+                    "\nPlease remove them.";
+                throw new InvalidOperationException(msg);
+            }
+            central_vectors[key_number, i] = float.IsNaN(res) ? 0 : res;
         }
     }
 
@@ -254,20 +266,21 @@ class Kmeans
     /// </summary>
     private void Update_step()
     {
-
         for (int i = 0; i < num_of_classes; i++)
         {
             Update_central_vectors(i);
+
         }
     }
+
     public void Train(int numOfIteration)
     {
-        for(int i = 0; i < numOfIteration; i++)
+        for (int i = 0; i < numOfIteration; i++)
         {
             Assignment_step();
             Update_step();
         }
-
+        Write_To_Csv_File();
     }
 
     private void Write_To_Csv_File()
@@ -276,15 +289,17 @@ class Kmeans
         try
         {
             //Pass the file-path and filename to the StreamWriter Constructor
-            using (StreamWriter writetext = new StreamWriter(path, true))
+            using (StreamWriter writetext = new StreamWriter(path))
             {
+                string header = "Id,Hand in Therapy (0 for left 1 for right),Height(cm),Arm Length,Standing (0 for no 1 for yes),Treatment Time (sec),Bubble in space,Velocity average (Best=1 Worst=0),Max velocity count (Best=1 Worst=0),Reaching time (Best=0 Worst=1),Path taken (Best=1 Worst=0),Jerkiness (Best=0 Worst=1),Bubble popped (Best=1 Worst=0),Total Score (Best=100 Worst=0),Bubble Position X,Bubble Position Y,Bubble Position Z,Bubble size,Distance between bubbles";
+                writetext.WriteLine(header);
 
                 //Write a line of text
                 for (int i = 0; i < central_vectors.GetLength(0); i++)
                 {
-                    string data_to_write = string.Join(",", GetRow(central_vectors, i));
+                    string data_to_write = ",";
+                    data_to_write += string.Join(",", GetRow(central_vectors, i));
                     writetext.WriteLine(data_to_write);
-                    
                 }
             }
         }
@@ -294,7 +309,7 @@ class Kmeans
         }
 
     }
-    public float[] GetRow(float[,] matrix, int rowNumber)
+    private float[] GetRow(float[,] matrix, int rowNumber)
     {
         return Enumerable.Range(0, matrix.GetLength(1))
                 .Select(x => matrix[rowNumber, x])

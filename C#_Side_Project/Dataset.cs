@@ -161,6 +161,7 @@ public class Dataset /*: MonoBehaviour*/
     {
         string[] text = File.ReadAllLines(file_to_read);
         int flag = 0;
+        bool skipNextLine = false;
         foreach (var line in text)
         {
             //Don't need the first line from the text.
@@ -170,13 +171,25 @@ public class Dataset /*: MonoBehaviour*/
             {
 
                 string[] tokens = line.Split(',');
-
-                New_data_line(Convert.ToSingle(tokens[0]), Convert.ToSingle(tokens[1]), Convert.ToSingle(tokens[2]),
-                    Convert.ToSingle(tokens[3]), Convert.ToSingle(tokens[4]), Convert.ToInt32(tokens[5]),
-                    Convert.ToInt32(tokens[6]), Convert.ToSingle(tokens[7]), Convert.ToSingle(tokens[8]),
-                    Convert.ToSingle(tokens[9]), tokens[10]);
+                if (tokens[0] == "" && tokens[1] == "")
+                {
+                    skipNextLine = true;
+                    Write_data_to_file();
+                    continue;
+                }
+                else if (skipNextLine) 
+                    skipNextLine = false;
+                else
+                {
+                    New_data_line(Convert.ToSingle(tokens[0]), Convert.ToSingle(tokens[1]), Convert.ToSingle(tokens[2]),
+                        Convert.ToSingle(tokens[3]), Convert.ToSingle(tokens[4]), Convert.ToInt32(tokens[5]),
+                        Convert.ToInt32(tokens[6]), Convert.ToSingle(tokens[7]), Convert.ToSingle(tokens[8]),
+                        Convert.ToSingle(tokens[9]), tokens[10]);
+                }
                 flag++;
+
             }
         }
+        Write_data_to_file();
     }
 }

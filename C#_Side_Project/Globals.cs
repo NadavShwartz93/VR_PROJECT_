@@ -11,6 +11,7 @@ namespace ConsoleApp
     {
         public const string file_name_dataset = "Dataset.csv";
         public const string CentralVectorsKmeans_dataset = "CentralVectorsKmeans.csv";
+        public const string KmeansClusters = "KmeansClusters.txt";
 
         ////// The area that the bubbles can show up//////////
         public const string FBCInSpace = "Front-Bottom-Center";

@@ -279,6 +279,8 @@ class Kmeans
             Update_step();
         }
         Write_To_Csv_File();
+        DictionaryToJson();
+
     }
 
     private void Write_To_Csv_File()
@@ -312,6 +314,19 @@ class Kmeans
         return Enumerable.Range(0, matrix.GetLength(1))
                 .Select(x => matrix[rowNumber, x])
                 .ToArray();
+    }
+
+    private void DictionaryToJson()
+    {
+        var entries = classification.Select(d =>
+            string.Format("{0}: [{1}]", d.Key, string.Join(",", d.Value)));
+        string s = "{ " + string.Join(",", entries) + " }";
+
+        //Pass the file-path and filename to the StreamWriter Constructor
+        using (StreamWriter writetext = new StreamWriter(Globals.KmeansClusters))
+        {
+            writetext.WriteLine(s);
+        }
     }
 
 }

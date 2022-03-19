@@ -32,6 +32,10 @@ namespace ConsoleApp
         */
         public float CalcRMSE()
         {
+            int R;
+            int vectorDimension = 2;//numberof cols
+            //for()
+            //for()
             return (float)0.0;//stam value
         }
     }

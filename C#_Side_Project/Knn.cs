@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,13 +8,17 @@ using System.Threading.Tasks;
 /// Based on: https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/december/test-run-understanding-k-nn-classification-using-csharp#wrapping-up
 namespace ConsoleApp
 {
+    
+
     class KNN
     {
         private static KNN instance = null;
+        private float[] useVectorKmeans = new float[] { 0, 1, (float)0.1, (float)0.9008626, (float)0.1519834, (float)0.02166149, 1, 51, (float)0.8, (float)0.4, (float)0.5 };//User Vector
+        private Dictionary<string, List<float[]>> user_data = new Dictionary<string, List<float[]>>();
+
         private KNN()
         {
             instance = this;
-
         }
         public static KNN Get_instance()
         {
@@ -24,16 +29,58 @@ namespace ConsoleApp
             return instance;
         }
 
+        private List<string[]> ReadLines(string fileName)
+        {
+
+            string[] text = File.ReadAllLines(fileName);
+            int skipFirstLineInDataset = 0;
+            List<string[]> list = new List<string[]>();
+
+            //Save the string array in the List collection.
+            foreach (var line in text)
+            {
+                //Don't need the first line from the dataset.
+                if (skipFirstLineInDataset < 1)
+                {
+                    skipFirstLineInDataset++;
+                }
+                else
+                {
+                    string[] tokens = line.Split(',');
+                    list.Add(tokens);
+                }
+            }
+            return list;
+        }
+        /*        public static string DictionaryToJson(Dictionary<string, List<float[]>> dict)
+                {
+                    var entries = dict.Select(d =>
+                        string.Format("{0}:{1}", d.Key, string.Join(",", d.Value)));
+                    return string.Join(",", entries);
+                }*/
+        public static Dictionary<string, List<float[]>> JsonToDictionary(string json)
+        {
+            Dictionary<string, List<float[]>> values = new Dictionary<string, List<float[]>>();
+            string[] items = json.Split(',');
+            foreach (string item in items)
+            {
+                string[] keyValue = item.Split(':');
+               // values.Add(keyValue[0], keyValue[1]);
+            }
+            return values;
+        }
         public void start()
         {
             Console.WriteLine("Begin k-NN classification demo ");
-            double[][] trainData = LoadData();
-            int numFeatures = 2;// Currently we are not using it.This could be useful to our project
-            int numClasses = 3; //In this case the classes are 0 || 1 || 2
-            int k, predicted;
-            double[] unknown = new double[] { 5.25, 1.75 }; ///{X point , Y point}
-            Console.WriteLine("Predictor values: 5.25 1.75 ");
-
+            var centralVectorList = ReadLines(Globals.CentralVectorsKmeans_dataset);
+           // DictionaryToJson(user_data);
+            /*  double[][] trainData = LoadData();
+              int numFeatures = 2;// Currently we are not using it.This could be useful to our project
+              int numClasses = 3; //In this case the classes are 0 || 1 || 2
+              int k, predicted;
+              double[] unknown = new double[] { 5.25, 1.75 }; ///{X point , Y point}
+              Console.WriteLine("Predictor values: 5.25 1.75 ");
+            */
             ////With k = 1 predicted class should be 1.Inside the voted array -> (“1,”)///////////
             /*int k = 1;
             Console.WriteLine("With k = 1");
@@ -43,13 +90,13 @@ namespace ConsoleApp
             */
             ////With k = 4 predicted class should be 4.Inside the voted array -> (“1,” “0,” “2,” “2”)///////////
 
-            k = 4;
-            Console.WriteLine("With k = 4");
-            predicted = Classify(unknown, trainData, numClasses, k);
+            /*    k = 4;
+                Console.WriteLine("With k = 4");
+               // predicted = Classify(unknown, trainData, numClasses, k);
 
-            Console.WriteLine("Predicted class = " + predicted);
-            Console.WriteLine("End k-NN demo ");
-            Console.ReadLine();
+                Console.WriteLine("Predicted class = " + predicted);
+                Console.WriteLine("End k-NN demo ");
+                Console.ReadLine();*/
         }
 
         public static int Classify(double[] unknown, double[][] trainData, int numClasses, int k)

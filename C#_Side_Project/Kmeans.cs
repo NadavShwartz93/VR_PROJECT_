@@ -117,10 +117,8 @@ class Kmeans
             }
             i++;
         }
-
     }
-
-
+  
     /// <summary>
     /// This method calculate the euclidean distance of two given vectors.
     /// </summary>

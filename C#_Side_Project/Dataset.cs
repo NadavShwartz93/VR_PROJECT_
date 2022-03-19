@@ -13,6 +13,7 @@ public class Dataset /*: MonoBehaviour*/
     private static Dataset instance = null;
     private Dictionary<string, List<float[]>> user_data = new Dictionary<string, List<float[]>>();
     private string[] PatientDetailes = new string[6];
+    private static int numberOfColumns = 11;
 
     private Dataset()
     {
@@ -81,23 +82,28 @@ public class Dataset /*: MonoBehaviour*/
 
         foreach (var item in user_data)
         {
-            string data_to_write = "";
-            for (int i = 0; i < PatientDetailes.Length; i++)
-                data_to_write += PatientDetailes[i] + ",";
-            data_to_write += item.Key + ",";
 
-            var val = item.Value;
-            for (int i = 0; i < val[0].Count(); i++)
-                data_to_write += val[0][i].ToString("0.00") + ",";
+            {
+
+                string data_to_write = "";
+                for (int i = 0; i < PatientDetailes.Length; i++)
+                    data_to_write += PatientDetailes[i] + ",";
+                data_to_write += item.Key + ",";
+
+                var val = item.Value;
+                for (int i = 0; i < val[0].Count(); i++)
+                    data_to_write += val[0][i].ToString("0.00") + ",";
 
 
-            Write_To_Csv_File(data_to_write);
+                Write_To_Csv_File(data_to_write);
+            }
+            //Remove all the keys and the values from the dictionary.
+            user_data.Clear();
         }
-        //Remove all the keys and the values from the dictionary.
-        user_data.Clear();
     }
 
-    private void Write_To_Csv_File(string data_to_write)
+
+        private void Write_To_Csv_File(string data_to_write)
     {
         try
         {

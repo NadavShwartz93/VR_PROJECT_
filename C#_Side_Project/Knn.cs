@@ -8,18 +8,22 @@ using System.Threading.Tasks;
 /// Based on: https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/december/test-run-understanding-k-nn-classification-using-csharp#wrapping-up
 namespace ConsoleApp
 {
-    
+
 
     class KNN
     {
         private static KNN instance = null;
-        private float[] useVectorKmeans = new float[] { 0, 1, (float)0.1, (float)0.9008626, (float)0.1519834, (float)0.02166149, 1, 51, (float)0.8, (float)0.4, (float)0.5 };//User Vector
+        private Double[] useVectorKmeans = new Double[] { 0, 1, (float)0.1, (float)0.9008626, (float)0.1519834, (float)0.02166149, 1, 51, (float)0.8, (float)0.4, (float)0.5 };//User Vector
         private Dictionary<string, List<float[]>> user_data = new Dictionary<string, List<float[]>>();
         private Dictionary<int, int[]> kmeansClusters = new Dictionary<int, int[]>();
+        private Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
+        private List<float[]> arrayfloatList;
 
         private KNN()
         {
             instance = this;
+
+            Initialize_BubbleInSpace_dictionary();
         }
         public static KNN Get_instance()
         {
@@ -28,6 +32,22 @@ namespace ConsoleApp
                 instance = new KNN();
             }
             return instance;
+        }
+
+        private void Initialize_BubbleInSpace_dictionary()
+        {
+            BubbleInSpace.Add(Globals.FBCInSpace, 0);
+            BubbleInSpace.Add(Globals.FBRInSpace, 1);
+            BubbleInSpace.Add(Globals.FBLInSpace, 2);
+            BubbleInSpace.Add(Globals.FTCInSpace, 3);
+            BubbleInSpace.Add(Globals.FTRInSpace, 4);
+            BubbleInSpace.Add(Globals.FTLInSpace, 5);
+            BubbleInSpace.Add(Globals.BBCInSpace, 6);
+            BubbleInSpace.Add(Globals.BBRInSpace, 7);
+            BubbleInSpace.Add(Globals.BBLInSpace, 8);
+            BubbleInSpace.Add(Globals.BTCInSpace, 9);
+            BubbleInSpace.Add(Globals.BTRInSpace, 10);
+            BubbleInSpace.Add(Globals.BTLInSpace, 11);
         }
 
         private List<string[]> ReadLines(string fileName)
@@ -60,10 +80,10 @@ namespace ConsoleApp
         public static Dictionary<int, int[]> JsonToDictionary(string[] json)
         {
             Dictionary<int, int[]> values = new Dictionary<int, int[]>();
-            for (int i = 1; i < json.Length - 1;i++) // iterate all besides, first and last character  "{" , "}"
+            for (int i = 1; i < json.Length - 1; i++) // iterate all besides, first and last character  "{" , "}"
             {
                 string[] items = json[i].Split(':');
-                string rows = items[1].Replace(@"[", string.Empty).Replace(@"]", string.Empty); 
+                string rows = items[1].Replace(@"[", string.Empty).Replace(@"]", string.Empty);
                 string result = rows.Remove(rows.Length - 1); // remove last comma -> ,
                 int[] nums = Array.ConvertAll(result.Split(','), int.Parse);
                 values.Add(int.Parse(items[0]), nums);
@@ -71,15 +91,83 @@ namespace ConsoleApp
 
             return values;
         }
+        /// <summary>
+        /// Convert Vectors from excel to List of float array.
+        /// </summary>
+
+        private List<float[]> ListStringToFloat(List<string[]> listStr)
+        {
+            float[] iArr;
+            int columnNumbers = 11;
+            List<float[]> arrayFloatList = new List<float[]>();
+
+            float[,] floatArray = new float[3,columnNumbers];
+
+            int j = 0;
+            int i = 6;
+            foreach (string[] stringArray in listStr)
+            {
+                for ( i = 6; i < stringArray.Length - 2; i++) //Iterate over relevant fields iin csv !!
+                {
+                   
+                    string str = stringArray[i];
+                    if (i == 6) //When column number its not relevant
+                    {
+                        float num;
+                        num = BubbleInSpace[str];
+                        floatArray[j,i - 6] = num;
+                    }
+                    else
+                    {
+                        floatArray[j,i - 6] = float.Parse(str);
+                    }
+                }
+               
+               // arrayFloatList.Add(floatArray[j,11]);
+                j++;
+                /*for (int k = 0; k < floatArray.Length; k++)//Initiali arr array
+                {
+                    floatArray[k] = 0;
+                }*/
+
+            }
+            return arrayFloatList;
+        }
         public void start()
 
         {   //Prepare input for KNN /////////////////////////////
-            //(Dictionary)useVectorKmeans vector that define above is an example of user vector that came from kmeans
-            var centralVectorList = ReadLines(Globals.CentralVectorsKmeans_dataset);
+            //useVectorKmeans vector that define above is an example of user vector that came from kmeans
+            List<string[]> readCentralVector = ReadLines(Globals.CentralVectorsKmeans_dataset);
+            List<float[]> centralVectorList = ListStringToFloat(readCentralVector);
             string[] result = File.ReadAllLines(Globals.KmeansClusters);
             kmeansClusters = JsonToDictionary(result);
 
             ////////////////////////////////////////////////////
+            List<double[]> centralVector = new List<double[]>();
+            centralVector.AddRange(centralVectorList.Select(flArray => Array.ConvertAll(flArray, f => (double)f)));
+            int numClasses = 3; //In this case the classes are 0 || 1 || 2
+            int numOfColums = 11;
+            double[][] trainData = new double[numClasses][];
+            double[] arr = new double[numOfColums];
+
+            int i = 0;
+            foreach (double[] elem in centralVector)
+            {
+                for (int j = 0; j < numOfColums; j++)
+                    arr[j] = elem[j];
+
+                trainData[i] = new double[] { arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8], arr[9], arr[10] };
+                for (int k = 0; k < arr.Length; k++)//Initiali arr array
+                {
+                    arr[k] = 0;
+                }
+                i++;
+            }
+
+
+            int predicted = Classify(useVectorKmeans, trainData, numClasses, 1);
+            Console.WriteLine("Predicted class = " + predicted);
+
 
             /*  double[][] trainData = LoadData();
               int numFeatures = 2;// Currently we are not using it.This could be useful to our project
@@ -105,7 +193,10 @@ namespace ConsoleApp
                 Console.WriteLine("End k-NN demo ");
                 Console.ReadLine();*/
         }
-
+        private void UserToCentralSimalarity(float[] userVec, List<float[]> centralVectList)
+        {
+            //    int k = 1;
+        }
         public static int Classify(double[] unknown, double[][] trainData, int numClasses, int k)
 
         {

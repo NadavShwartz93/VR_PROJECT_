@@ -15,6 +15,7 @@ namespace ConsoleApp
         private static KNN instance = null;
         private float[] useVectorKmeans = new float[] { 0, 1, (float)0.1, (float)0.9008626, (float)0.1519834, (float)0.02166149, 1, 51, (float)0.8, (float)0.4, (float)0.5 };//User Vector
         private Dictionary<string, List<float[]>> user_data = new Dictionary<string, List<float[]>>();
+        private Dictionary<int, int[]> kmeansClusters = new Dictionary<int, int[]>();
 
         private KNN()
         {
@@ -52,28 +53,34 @@ namespace ConsoleApp
             }
             return list;
         }
-        /*        public static string DictionaryToJson(Dictionary<string, List<float[]>> dict)
-                {
-                    var entries = dict.Select(d =>
-                        string.Format("{0}:{1}", d.Key, string.Join(",", d.Value)));
-                    return string.Join(",", entries);
-                }*/
-        public static Dictionary<string, List<float[]>> JsonToDictionary(string json)
+
+        /// <summary>
+        /// Convert the file KmeansClusters.txt from json to Dictionary
+        /// </summary>
+        public static Dictionary<int, int[]> JsonToDictionary(string[] json)
         {
-            Dictionary<string, List<float[]>> values = new Dictionary<string, List<float[]>>();
-            string[] items = json.Split(',');
-            foreach (string item in items)
+            Dictionary<int, int[]> values = new Dictionary<int, int[]>();
+            for (int i = 1; i < json.Length - 1;i++) // iterate all besides, first and last character  "{" , "}"
             {
-                string[] keyValue = item.Split(':');
-               // values.Add(keyValue[0], keyValue[1]);
+                string[] items = json[i].Split(':');
+                string rows = items[1].Replace(@"[", string.Empty).Replace(@"]", string.Empty); 
+                string result = rows.Remove(rows.Length - 1); // remove last comma -> ,
+                int[] nums = Array.ConvertAll(result.Split(','), int.Parse);
+                values.Add(int.Parse(items[0]), nums);
             }
+
             return values;
         }
         public void start()
-        {
-            Console.WriteLine("Begin k-NN classification demo ");
+
+        {   //Prepare input for KNN /////////////////////////////
+            //(Dictionary)useVectorKmeans vector that define above is an example of user vector that came from kmeans
             var centralVectorList = ReadLines(Globals.CentralVectorsKmeans_dataset);
-           // DictionaryToJson(user_data);
+            string[] result = File.ReadAllLines(Globals.KmeansClusters);
+            kmeansClusters = JsonToDictionary(result);
+
+            ////////////////////////////////////////////////////
+
             /*  double[][] trainData = LoadData();
               int numFeatures = 2;// Currently we are not using it.This could be useful to our project
               int numClasses = 3; //In this case the classes are 0 || 1 || 2

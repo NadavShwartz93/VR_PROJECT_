@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 //using UnityEngine;
 using System.IO;
-using ConsoleApp;
-
 
 public class Dataset /*: MonoBehaviour*/
 {
@@ -103,7 +101,7 @@ public class Dataset /*: MonoBehaviour*/
     }
 
 
-        private void Write_To_Csv_File(string data_to_write)
+    private void Write_To_Csv_File(string data_to_write)
     {
         try
         {
@@ -183,7 +181,7 @@ public class Dataset /*: MonoBehaviour*/
                     Write_data_to_file();
                     continue;
                 }
-                else if (skipNextLine) 
+                else if (skipNextLine)
                     skipNextLine = false;
                 else
                 {

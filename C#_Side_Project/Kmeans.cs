@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using ConsoleApp;
 
 /// <summary>
 /// Based on: https://en.wikipedia.org/wiki/K-means_clustering

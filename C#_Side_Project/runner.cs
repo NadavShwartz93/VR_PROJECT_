@@ -20,12 +20,14 @@ class runner
         //Dataset.Get_instance().read_file("PatientResults.csv");
         //Dataset.Get_instance().Write_data_to_file();
         //Kmeans km = new Kmeans(numberColumns);
-        //Kmeans.Get_instance().Train(10);
+
+        Kmeans.Get_instance().Train(10);
 
         KNN.Get_instance().start();
 
 
         Console.WriteLine("Process finished!\n");
+
         Console.ReadKey();
     }
 }

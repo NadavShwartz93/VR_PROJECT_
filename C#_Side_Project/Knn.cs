@@ -5,15 +5,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//using System.Text.RegularExpressions;
+
 /// Based on: https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/december/test-run-understanding-k-nn-classification-using-csharp#wrapping-up
 class KNN
 {
     private static KNN instance = null;
-    private Double[] useVectorKmeans = new Double[] { 0, 1, (float)0.1, (float)0.9008626, (float)0.1519834, (float)0.02166149, 1, 51, (float)0.8, (float)0.4, (float)0.5 };//User Vector
+
+    /*private double[] useVectorKmeans = new double[] { 0, 1, (float)0.1, (float)0.9008626, 
+        (float)0.1519834, (float)0.02166149, 1, 51, (float)0.8, (float)0.4, (float)0.5 };//User Vector
+    */
+
+    //Simulate User Vector
+    private double[] useVectorKmeans = new double[] {0, 158, 0.438, 1, 180, 3, 0.52, 0.4, 0.49,
+    0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
+
+
     private Dictionary<string, List<float[]>> user_data = new Dictionary<string, List<float[]>>();
+
+
     private Dictionary<int, int[]> kmeansClusters = new Dictionary<int, int[]>();
     /*        private Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
     */
+
     private KNN()
     {
         instance = this;
@@ -71,12 +85,13 @@ class KNN
         }
 
     }
-    private List<string[]> ReadLines(string fileName)
+
+    private List<double[]> ReadLines(string fileName)
     {
 
         string[] text = File.ReadAllLines(fileName);
         int skipFirstLineInDataset = 0;
-        List<string[]> list = new List<string[]>();
+        List<double[]> list = new List<double[]>();
 
         //Save the string array in the List collection.
         foreach (var line in text)
@@ -89,14 +104,27 @@ class KNN
             else
             {
                 string[] tokens = line.Split(',');
-                list.Add(tokens);
+                var floatArray = convertToDouble(tokens);
+                list.Add(floatArray);
             }
         }
         return list;
     }
 
     /// <summary>
-    /// Convert the file KmeansClusters.txt from json to Dictionary
+    /// This method convert an string array into float array.
+    /// </summary>
+    /// <param name="stringRow"></param>
+    /// <returns>float array.</returns>
+    private double[] convertToDouble(string[] stringRow)
+    {
+        var len = stringRow.Length;
+        return Enumerable.Range(1, len-1).
+            Select(x => double.Parse(stringRow[x])).ToArray();
+    }
+
+    /// <summary>
+    /// Convert the file KmeansClusters.txt from Json style to Dictionary structure
     /// </summary>
     public static Dictionary<int, int[]> JsonToDictionary(string[] json)
     {
@@ -104,9 +132,9 @@ class KNN
         for (int i = 1; i < json.Length - 1; i++) // iterate all besides, first and last character  "{" , "}"
         {
             string[] items = json[i].Split(':');
-            string rows = items[1].Replace(@"[", string.Empty).Replace(@"]", string.Empty);
-            string result = rows.Remove(rows.Length - 1); // remove last comma -> ,
-            int[] nums = Array.ConvertAll(result.Split(','), int.Parse);
+            string rows = items[1].Replace(@"[", string.Empty).Replace(@"],", string.Empty);
+            
+            int[] nums = Array.ConvertAll(rows.Split(','), int.Parse);
             values.Add(int.Parse(items[0]), nums);
         }
 
@@ -145,37 +173,64 @@ class KNN
         }
         return floatArray;
     }
+    
     public void start()
+    {
+        //General constants.
+        const int numClasses = Globals.num_of_classes; //In this case the classes are 0 || 1 || 2
+        int numOfColums = Globals.numOfColumnsInDataSet;
+        int k = Globals.K;
 
-    {   //Prepare input for KNN /////////////////////////////
-        List<string[]> readCentralVector = ReadLines(Globals.CentralVectorsKmeans_dataset);
-        float[,] centralVectorList = ListStringToFloat(readCentralVector);
+        //Prepare input for KNN .
+        /////////////////////////////////////////////////
+        
+        //Read and prepare the CentralVectorsKmeans.csv file.
+        List<double[]> readCentralVector = ReadLines(Globals.CentralVectorsKmeans_dataset);
+        double[][] CentralVectorskmeans = toMatrixOfDouble(numClasses, readCentralVector);
+
+        //Read and prepare the KmeansClusters.txt
         string[] result = File.ReadAllLines(Globals.KmeansClusters);
         kmeansClusters = JsonToDictionary(result);
+
         List<int[]> mostSimilarVec = new List<int[]>();
         string[] dataset = File.ReadAllLines(Globals.file_name_dataset);
-        int numClasses = 3; //In this case the classes are 0 || 1 || 2
-        int numOfColums = 11;
-        int k = 15;
-        double[][] trainData = new double[numClasses][];
-
-        ////////////////////////////////////////////////////
-
-        for (int i = 0; i < numClasses; i++)//Convert from float[,] to double[][] array
-        {
-            //Add in the last element  in trainData cluster number! 
-            trainData[i] = new double[] { centralVectorList[i, 0], centralVectorList[i, 1], centralVectorList[i, 2], centralVectorList[i, 3], centralVectorList[i, 4], centralVectorList[i, 5], centralVectorList[i, 6], centralVectorList[i, 7], centralVectorList[i, 8], centralVectorList[i, 9], centralVectorList[i, 10], i };
-        }
-
+        
+        
         //Find the most similar vectors in the predictedClass
-        int predictedClass = Classify(useVectorKmeans, trainData, numClasses, numOfColums); //This is the predicted class
-        Console.WriteLine("Predicted class = " + predictedClass);
+
+        int predictedClass = Classify(useVectorKmeans, CentralVectorskmeans, numClasses, 
+            numOfColums); //This is the predicted class
+
+        Console.WriteLine("The User Predicted class = " + predictedClass);
+
         mostSimilarVec.Add(kmeansClusters[predictedClass]);
         Write_To_Csv_File(Globals.KnnOutput, mostSimilarVec, k);
         ///////////////////////////////////////////////////
     }
 
-    public static int Classify(double[] unknown, double[][] trainData, int numClasses, int numOfColums)
+    /// <summary>
+    /// This method convert from List<double[]> to double[][] array.
+    /// </summary>
+    /// <param name="numClasses"></param>
+    /// <param name="centralVector"></param>
+    /// <returns></returns>
+    private double[][] toMatrixOfDouble(int numClasses, List<double[]> centralVector)
+    {
+        double[][] trainData = new double[numClasses][];
+
+
+        for (int i = 0; i < numClasses; i++)//
+        {
+            //Add in the last element  in trainData cluster number! 
+            double[] d = { i };
+            trainData[i] = centralVector[i].Concat(d).ToArray();
+        }
+
+        return trainData;
+    }
+
+    public static int Classify(double[] unknown, double[][] trainData, int numClasses, 
+        int numOfColums)
     {
         int n = trainData.Length;
         IndexAndDistance[] info = new IndexAndDistance[n];
@@ -194,6 +249,7 @@ class KNN
         int result = Vote(info, trainData, numClasses, numOfColums);
         return result;
     }
+
     ////In case the voted array there are classes that shows the same count (“2,” “1,” “1,” “2”)
     //the class that taken is the lowest so in the above simple example 1 should be choosen
     static int Vote(IndexAndDistance[] info, double[][] trainData, int numClasses, int numOfColums)
@@ -223,6 +279,7 @@ class KNN
             sum += (unknown[i] - data[i]) * (unknown[i] - data[i]);
         return Math.Sqrt(sum);
     }
+
     public class IndexAndDistance : IComparable<IndexAndDistance> //Interface for the info array
     {
         public int idx;  // Index of a training item

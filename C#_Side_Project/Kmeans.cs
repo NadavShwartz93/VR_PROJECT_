@@ -13,9 +13,9 @@ class Kmeans
     private static Kmeans instance = null;
     private int numCentralVec; // m1,m2.... mk
     private float[,] data_mat;
-    private Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
+    private Dictionary<string, float> BubbleInSpace;
     private float[,] central_vectors;
-    private const int num_of_classes = 3; // number of clusters
+    private const int num_of_classes = Globals.num_of_classes; // number of clusters
     private Dictionary<int, HashSet<int>> classification = new Dictionary<int, HashSet<int>>();
 
     //Constant variables that we are using in this class.
@@ -145,18 +145,7 @@ class Kmeans
     /// </summary>
     private void Initialize_BubbleInSpace_dictionary()
     {
-        BubbleInSpace.Add(Globals.FBCInSpace, 0);
-        BubbleInSpace.Add(Globals.FBRInSpace, 1);
-        BubbleInSpace.Add(Globals.FBLInSpace, 2);
-        BubbleInSpace.Add(Globals.FTCInSpace, 3);
-        BubbleInSpace.Add(Globals.FTRInSpace, 4);
-        BubbleInSpace.Add(Globals.FTLInSpace, 5);
-        BubbleInSpace.Add(Globals.BBCInSpace, 6);
-        BubbleInSpace.Add(Globals.BBRInSpace, 7);
-        BubbleInSpace.Add(Globals.BBLInSpace, 8);
-        BubbleInSpace.Add(Globals.BTCInSpace, 9);
-        BubbleInSpace.Add(Globals.BTRInSpace, 10);
-        BubbleInSpace.Add(Globals.BTLInSpace, 11);
+        BubbleInSpace = Globals.Initialize_BubbleInSpace_dictionary();
     }
 
 
@@ -318,8 +307,9 @@ class Kmeans
     private void DictionaryToJson()
     {
         var entries = classification.Select(d =>
-            string.Format("{0}: [{1}]", d.Key, string.Join(",", d.Value)));
-        string s = "{ " + string.Join(",", entries) + " }";
+            string.Format("{0} " +
+            ": [{1}]", d.Key, string.Join(",", d.Value)));
+        string s = "{\n " + string.Join(",\n", entries) + ",\n}";
 
         //Pass the file-path and filename to the StreamWriter Constructor
         using (StreamWriter writetext = new StreamWriter(Globals.KmeansClusters))

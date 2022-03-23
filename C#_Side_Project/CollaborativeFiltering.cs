@@ -10,7 +10,7 @@ class CollaborativeFiltering
 {  
     private static CollaborativeFiltering instance = null;
     private int[] neighborsNumbersFromKnn;
-    private float[,] neighborsData;
+    private float[][] neighborsData;
 
     private CollaborativeFiltering()
     {
@@ -37,13 +37,41 @@ class CollaborativeFiltering
         row = row[0].Split(',');
         neighborsNumbersFromKnn = convertToInt(row);
 
+        //Initialize array size.
+        int size = neighborsNumbersFromKnn.Count();
+        neighborsData = new float[size][];
 
         //Read the Dataset.csv file, and save only the lines
         //that appears in the neighborsNumbersFromKnn array.
-        File.ReadAllLines(Globals.file_name_dataset);
+        string[] dataset = File.ReadAllLines(Globals.file_name_dataset);
+        getUseresData(dataset);
         
     }
 
+
+    private void getUseresData(string[] dataset)
+    {
+        //local variable.
+        int rowCounter = 0;
+        int arrayIndex = 0;
+
+        foreach(string line in dataset)
+        {
+
+            //The case the count is not in neighborsNumbersFromKnn array.
+            if (rowCounter != 0 && neighborsNumbersFromKnn.Contains(rowCounter)) {
+                var temp = line.Split(',');
+
+                temp[Globals.bubble_in_space_column_number] = 
+                    Globals.getBubbleNumber(temp[Globals.bubble_in_space_column_number]).ToString();
+
+                neighborsData[arrayIndex] = convertToFloat(temp);
+                arrayIndex++;
+            }
+
+            rowCounter++;
+        }
+    }
 
     /// <summary>
     /// This method convert an string array into int array.
@@ -61,7 +89,7 @@ class CollaborativeFiltering
     private float[] convertToFloat(string[] stringRow)
     {
         var len = stringRow.Length;
-        return Enumerable.Range(1, len - 1)
+        return Enumerable.Range(1, len - 3)
             .Select(x => float.Parse(stringRow[x]))
             .ToArray();
     }

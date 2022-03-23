@@ -12,29 +12,19 @@ class KNN
 {
     private static KNN instance = null;
 
-    /*private double[] useVectorKmeans = new double[] { 0, 1, (float)0.1, (float)0.9008626, 
-        (float)0.1519834, (float)0.02166149, 1, 51, (float)0.8, (float)0.4, (float)0.5 };//User Vector
-    */
-
     //Simulate User Vector
     private double[] useVectorKmeans = new double[] {0, 158, 0.438, 1, 180, 3, 0.52, 0.4, 0.49,
     0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
 
-
     private Dictionary<string, List<float[]>> user_data = new Dictionary<string, List<float[]>>();
 
-
     private Dictionary<int, int[]> kmeansClusters = new Dictionary<int, int[]>();
-    /*        private Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
-    */
 
     private KNN()
     {
         instance = this;
-
-        /*          Initialize_BubbleInSpace_dictionary();
-        */
     }
+
     public static KNN Get_instance()
     {
         if (instance == null)
@@ -43,22 +33,6 @@ class KNN
         }
         return instance;
     }
-
-    /*        private void Initialize_BubbleInSpace_dictionary()
-            {
-                BubbleInSpace.Add(Globals.FBCInSpace, 0);
-                BubbleInSpace.Add(Globals.FBRInSpace, 1);
-                BubbleInSpace.Add(Globals.FBLInSpace, 2);
-                BubbleInSpace.Add(Globals.FTCInSpace, 3);
-                BubbleInSpace.Add(Globals.FTRInSpace, 4);
-                BubbleInSpace.Add(Globals.FTLInSpace, 5);
-                BubbleInSpace.Add(Globals.BBCInSpace, 6);
-                BubbleInSpace.Add(Globals.BBRInSpace, 7);
-                BubbleInSpace.Add(Globals.BBLInSpace, 8);
-                BubbleInSpace.Add(Globals.BTCInSpace, 9);
-                BubbleInSpace.Add(Globals.BTRInSpace, 10);
-                BubbleInSpace.Add(Globals.BTLInSpace, 11);
-            }*/
 
     private void Write_To_Csv_File(string path, List<int[]> simUsers, int k)
     {
@@ -139,39 +113,6 @@ class KNN
         }
 
         return values;
-    }
-
-    /// <summary>
-    /// Convert Vectors from excel to List of float array.
-    /// </summary>
-    private float[,] ListStringToFloat(List<string[]> listStr)
-    {
-        int columnNumbers = 11;
-        float[,] floatArray = new float[3, columnNumbers];
-
-        int j = 0;
-        int i = 6;
-        foreach (string[] stringArray in listStr)
-        {
-            for (i = 6; i < stringArray.Length - 2; i++) //Iterate over relevant fields iin csv !!
-            {
-                string str = stringArray[i];
-                /*     if (i == 6) //When column number its not relevant
-                     {
-                         float num;
-                         num = BubbleInSpace[str];
-                         floatArray[j, i - 6] = num;
-                     }
-                     else
-                     {*/
-                floatArray[j, i - 6] = float.Parse(str);
-                //}
-            }
-            j++;
-
-
-        }
-        return floatArray;
     }
     
     public void start()
@@ -272,6 +213,7 @@ class KNN
         }
         return classWithMostVotes;
     }
+
     static double Distance(double[] unknown, double[] data)
     {
         double sum = 0.0;

@@ -23,6 +23,10 @@ public class Globals
     /// This is the number of different columns in the Dataset.csv file.
     /// </summary>
     public const int numOfColumnsInDataSet = 16;
+    /// <summary>
+    /// This is the number of columns that the bubble_in_space is located.
+    /// </summary>
+    public const int bubble_in_space_column_number = 6;
 
     ////// The area that the bubbles can show up//////////
     public const string FBCInSpace = "Front-Bottom-Center";
@@ -42,6 +46,9 @@ public class Globals
 
     public static Dictionary<string, float> Initialize_BubbleInSpace_dictionary()
     {
+        if(BubbleInSpace.Count != 0)
+            return BubbleInSpace;
+
         BubbleInSpace.Add(Globals.FBCInSpace, 0);
         BubbleInSpace.Add(Globals.FBRInSpace, 1);
         BubbleInSpace.Add(Globals.FBLInSpace, 2);
@@ -58,4 +65,8 @@ public class Globals
         return BubbleInSpace;
     }
 
+    public static float getBubbleNumber(string bubbleName)
+    {
+        return Initialize_BubbleInSpace_dictionary()[bubbleName];
+    }
 }

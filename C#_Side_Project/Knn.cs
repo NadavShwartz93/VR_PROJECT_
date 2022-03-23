@@ -112,10 +112,10 @@ class KNN
     }
 
     /// <summary>
-    /// This method convert an string array into float array.
+    /// This method convert an string array into double array.
     /// </summary>
     /// <param name="stringRow"></param>
-    /// <returns>float array.</returns>
+    /// <returns>double array.</returns>
     private double[] convertToDouble(string[] stringRow)
     {
         var len = stringRow.Length;
@@ -195,13 +195,13 @@ class KNN
         List<int[]> mostSimilarVec = new List<int[]>();
         string[] dataset = File.ReadAllLines(Globals.file_name_dataset);
         
-        
-        //Find the most similar vectors in the predictedClass
 
+        //Find the most similar vectors in the predictedClass
         int predictedClass = Classify(useVectorKmeans, CentralVectorskmeans, numClasses, 
             numOfColums); //This is the predicted class
 
         Console.WriteLine("The User Predicted class = " + predictedClass);
+
 
         mostSimilarVec.Add(kmeansClusters[predictedClass]);
         Write_To_Csv_File(Globals.KnnOutput, mostSimilarVec, k);

@@ -25,6 +25,7 @@ class runner
 
         KNN.Get_instance().start();
 
+        CollaborativeFiltering.Get_instance().getInputs();
 
         Console.WriteLine("Process finished!\n");
 

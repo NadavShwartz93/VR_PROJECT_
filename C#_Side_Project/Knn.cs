@@ -11,7 +11,7 @@ class KNN
     private static KNN instance = null;
 
     //Simulate User Vector
-    private double[] useVectorKmeans = Globals.simulateUseVectorKmeans;
+    private double[] useVectorKmeans = Globals.simulateUseVector;
 
     private Dictionary<int, int[]> kmeansClusters = new Dictionary<int, int[]>();
 
@@ -44,7 +44,6 @@ class KNN
         {
             Console.WriteLine("Exception: " + e.Message);
         }
-
     }
 
     private List<double[]> ReadLines(string fileName)

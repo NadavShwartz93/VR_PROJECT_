@@ -1,0 +1,2 @@
+Id,Hand in Therapy (0 for left 1 for right),Height(cm),Arm Length,Standing (0 for no 1 for yes),Treatment Time (sec),Bubble in space,Velocity average (Best=1 Worst=0),Max velocity count (Best=1 Worst=0),Reaching time (Best=0 Worst=1),Path taken (Best=1 Worst=0),Jerkiness (Best=0 Worst=1),Bubble popped (Best=1 Worst=0),Total Score (Best=100 Worst=0),Bubble Position X,Bubble Position Y,Bubble Position Z,Bubble size,Distance between bubbles
+,0,158,0.438,1,180,3,5.465,5.465,5.465,5.465,5.465,5.465,5.465,5.465,5.465,5.465

@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 public class Globals
 {
-    public static double[] simulateUseVectorKmeans = new double[] {0, 158, 0.438, 1, 180, 3, 0.52, 0.4, 0.49,
-    0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
+    public static double[] simulateUseVector = new double[] {0, 158, 0.438, 1, 180, 3, 
+        0.52, 0.4, 0.49, 0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
 
     public const string file_name_dataset = "Dataset.csv";
     public const string CentralVectorsKmeans_dataset = "CentralVectorsKmeans.csv";
@@ -130,5 +130,4 @@ public class Globals
 
         return (float)Math.Sqrt(counter);
     }
-
 }

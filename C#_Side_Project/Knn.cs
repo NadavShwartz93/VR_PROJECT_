@@ -11,8 +11,7 @@ class KNN
     private static KNN instance = null;
 
     //Simulate User Vector
-    private double[] useVectorKmeans = new double[] {0, 158, 0.438, 1, 180, 3, 0.52, 0.4, 0.49,
-    0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
+    private double[] useVectorKmeans = Globals.simulateUseVectorKmeans;
 
     private Dictionary<int, int[]> kmeansClusters = new Dictionary<int, int[]>();
 
@@ -66,7 +65,7 @@ class KNN
             else
             {
                 string[] tokens = line.Split(',');
-                var floatArray = Globals.convertToDouble(tokens,1,1);
+                var floatArray = Globals.convertToDouble(tokens, 1, 1);
                 list.Add(floatArray);
             }
         }
@@ -84,14 +83,14 @@ class KNN
         {
             string[] items = json[i].Split(':');
             string rows = items[1].Replace(@"[", string.Empty).Replace(@"],", string.Empty);
-            
+
             int[] nums = Array.ConvertAll(rows.Split(','), int.Parse);
             values.Add(int.Parse(items[0]), nums);
         }
 
         return values;
     }
-    
+
     public void start()
     {
         //General constants.
@@ -101,7 +100,7 @@ class KNN
 
         //Prepare input for KNN .
         /////////////////////////////////////////////////
-        
+
         //Read and prepare the CentralVectorsKmeans.csv file.
         List<double[]> readCentralVector = ReadLines(Globals.CentralVectorsKmeans_dataset);
         double[][] CentralVectorskmeans = toMatrixOfDouble(numClasses, readCentralVector);
@@ -114,18 +113,18 @@ class KNN
         string[] dataset = File.ReadAllLines(Globals.file_name_dataset);
 
         //Find the most similar vectors in the predictedClass and write the data to knnOutput.csv
-        int[] predictedClass = Classify(useVectorKmeans, CentralVectorskmeans, numClasses, 
+        int[] predictedClass = Classify(useVectorKmeans, CentralVectorskmeans, numClasses,
             numOfColums); //The predicted class
 
-        double[][] datasetVectors = CreateSpesificVectors(dataset, kmeansClusters[predictedClass[0]]);        
+        double[][] datasetVectors = CreateSpesificVectors(dataset, kmeansClusters[predictedClass[0]]);
         int[] predictedVectors = Classify(useVectorKmeans, datasetVectors, numClasses,
-        numOfColums,k,true); //The predicted vectors inside the predited class                          
-     
-        Write_To_Csv_File(Globals.KnnOutput, predictedVectors);        
+        numOfColums, k, true); //The predicted vectors inside the predited class                          
+
+        Write_To_Csv_File(Globals.KnnOutput, predictedVectors);
         ///////////////////////////////////////////////////
     }
 
-    private double[][] CreateSpesificVectors(string[] dataset,int[] rows)
+    private double[][] CreateSpesificVectors(string[] dataset, int[] rows)
     {
         //local variable.
         int rowInDataSet = 0;
@@ -134,15 +133,15 @@ class KNN
         double[][] datVec = new double[rows.Length][];
         foreach (string line in dataset)
         {
-            if (rowInDataSet != 0 && rowInDataSet == rows[arrayrows] )
+            if (rowInDataSet != 0 && rowInDataSet == rows[arrayrows])
             {
                 var temp = line.Split(',');
                 temp[Globals.bubble_in_space_column_number] =
                 Globals.getBubbleNumber(temp[Globals.bubble_in_space_column_number]).ToString();
-                var t = Globals.convertToDouble(temp,0,2);
+                var t = Globals.convertToDouble(temp, 0, 2);
                 Array.Resize(ref t, t.Length + 1);
                 t[t.Length - 1] = (double)rows[arrayrows]; //After resize int the last element will be the number that represent the class.
-                datVec[i++] = t; 
+                datVec[i++] = t;
 
                 if (rows.Length > arrayrows + 1) //Terminate overflow in rows[arrayrows]
                     arrayrows++;
@@ -175,8 +174,8 @@ class KNN
         return trainData;
     }
 
-    public static int[] Classify(double[] unknown, double[][] trainData, int numClasses, 
-        int numOfColums,int k = 0,bool findFirstK = false)
+    public static int[] Classify(double[] unknown, double[][] trainData, int numClasses,
+        int numOfColums, int k = 0, bool findFirstK = false)
     {
         int n = trainData.Length;
         IndexAndDistance[] info = new IndexAndDistance[n];
@@ -192,7 +191,7 @@ class KNN
         Array.Sort(info); // sort the info array so the lowset value will be in the fisrt index 
         ////////////////////////////////////////////////////
         if (findFirstK)
-            return VoteMostClosestK( info, trainData, k);
+            return VoteMostClosestK(info, trainData, k);
 
         int[] result = VoteMostClosetClass(info, trainData, numClasses, numOfColums);
         return result;
@@ -209,7 +208,7 @@ class KNN
         ++votes[c];
 
         int mostVotes = 0;
-        int[] classWithMostVotes =new int[1];
+        int[] classWithMostVotes = new int[1];
         for (int j = 0; j < numClasses; ++j)
         {
             if (votes[j] > mostVotes)
@@ -249,7 +248,7 @@ class KNN
     /// <summary>
     /// Interface for the distance and relevant index.
     /// </summary>
-    public class IndexAndDistance : IComparable<IndexAndDistance> 
+    public class IndexAndDistance : IComparable<IndexAndDistance>
     {
         public int idx;  // Index of a training item
         public double dist;  // To unknown

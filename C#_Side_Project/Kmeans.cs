@@ -117,7 +117,7 @@ class Kmeans
             i++;
         }
     }
-  
+
     /// <summary>
     /// This method calculate the euclidean distance of two given vectors.
     /// </summary>
@@ -127,16 +127,8 @@ class Kmeans
     /// <returns>The euclidean distance of the two vectors.</returns>
     private float Euclidean_distance(int row_num1, int central_vectors_row_num, int vector_size)
     {
-        float count = 0;
-        const double power = 2;
-
-        for (int i = 0; i < vector_size; i++)
-        {
-            float temp = (float)Math.Pow(data_mat[row_num1, i] - central_vectors[central_vectors_row_num, i], power);
-            count += temp;
-        }
-
-        return (float)Math.Sqrt(count);
+        return Globals.Euclidean_distance(GetRow(data_mat, row_num1),
+            GetRow(central_vectors, central_vectors_row_num), vector_size);
     }
 
 
@@ -237,7 +229,8 @@ class Kmeans
             }
 
             float res = cnt / classification[key_number].Count;
-            if (float.IsNaN(res)) {
+            if (float.IsNaN(res))
+            {
                 string msg = "res is Nan the reason: \nThere is a duplicates values in the Dataset.csv. " +
                     "\nPlease remove them.";
                 throw new InvalidOperationException(msg);
@@ -297,6 +290,7 @@ class Kmeans
         }
 
     }
+
     private float[] GetRow(float[,] matrix, int rowNumber)
     {
         return Enumerable.Range(0, matrix.GetLength(1))

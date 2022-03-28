@@ -8,10 +8,14 @@ using System.Threading.Tasks;
 
 public class Globals
 {
+    public static double[] simulateUseVectorKmeans = new double[] {0, 158, 0.438, 1, 180, 3, 0.52, 0.4, 0.49,
+    0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
+
     public const string file_name_dataset = "Dataset.csv";
     public const string CentralVectorsKmeans_dataset = "CentralVectorsKmeans.csv";
     public const string KmeansClusters = "KmeansClusters.txt";
     public const string KnnOutput = "KnnOutput.csv";
+    public const string CfOutput = "CFOutput.csv";
     /// <summary>
     /// The number of clusters.
     /// </summary>
@@ -72,7 +76,7 @@ public class Globals
         return Initialize_BubbleInSpace_dictionary()[bubbleName];
     }
 
-    //Convertion Methods
+    //Conversion Methods
     public static double[] convertToDouble(string[] stringRow, int startIdx, int lastIdx)
     {
         var len = stringRow.Length;
@@ -84,7 +88,7 @@ public class Globals
     /// This method convert an string array into int array.
     /// </summary>
     /// <param name="stringRow"></param>
-    /// <returns>double array.</returns>
+    /// <returns>int array.</returns>
     public static int[] convertToInt(string[] stringRow, int startIdx, int lastIdx)
     {
         var len = stringRow.Length;
@@ -93,12 +97,38 @@ public class Globals
             .ToArray();
     }
 
+    /// <summary>
+    /// This method convert an string array into float array.
+    /// </summary>
+    /// <param name="stringRow"></param>
+    /// <returns>float array.</returns>
     public static float[] convertToFloat(string[] stringRow, int startIdx, int lastIdx)
     {
         var len = stringRow.Length;
         return Enumerable.Range(startIdx, len - lastIdx)
             .Select(x => float.Parse(stringRow[x]))
             .ToArray();
+    }
+
+    /// <summary>
+    /// This method is calculating the Euclidean distance of two vectors.
+    /// </summary>
+    /// <param name="v1"></param>
+    /// <param name="v2"></param>
+    /// <param name="vector_size"></param>
+    /// <returns>The Euclidean distance of two vectors.</returns>
+    public static float Euclidean_distance(float[] v1, float[] v2, int vector_size)
+    {
+        float counter = 0;
+        const double power = 2;
+
+        for (int i = 0; i < vector_size; i++)
+        {
+            float temp = (float)Math.Pow(v1[i] - v2[i], power);
+            counter += temp;
+        }
+
+        return (float)Math.Sqrt(counter);
     }
 
 }

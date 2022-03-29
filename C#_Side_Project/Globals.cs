@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 public class Globals
 {
-    public static double[] simulateUseVector = new double[] {0, 158, 0.438, 1, 180, 3, 
+    public static double[] simulateUseVector = new double[] {0, 158, 0.438, 1, 180, 3,
         0.52, 0.4, 0.49, 0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
 
     public const string file_name_dataset = "Dataset.csv";
@@ -129,5 +129,34 @@ public class Globals
         }
 
         return (float)Math.Sqrt(counter);
+    }
+
+    public static double Euclidean_distance(double[] v1, double[] v2, int vector_size)
+    {
+        double counter = 0;
+        const double power = 2;
+
+        for (int i = 0; i < vector_size; i++)
+        {
+            double temp = Math.Pow(v1[i] - v2[i], power);
+            counter += temp;
+        }
+
+        return Math.Sqrt(counter);
+    }
+
+    public static T[] GetRow<T>(T[,] matrix, int rowNumber)
+    {
+        return Enumerable.Range(0, matrix.GetLength(1))
+                .Select(x => matrix[rowNumber, x])
+                .ToArray();
+    }
+
+    public static T[] GetRow<T>(T[][] matrix, int rowNumber)
+    {
+        int count = matrix[0].Length;
+        return Enumerable.Range(0, count)
+                .Select(x => matrix[rowNumber][x])
+                .ToArray();
     }
 }

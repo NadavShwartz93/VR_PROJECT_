@@ -12,8 +12,9 @@ class CollaborativeFiltering
 
     private static CollaborativeFiltering instance = null;
     private int[] neighborsNumbersFromKnn;
-    private float[][] neighborsData;
-    private float[] predictedValues;
+    private double[][] neighborsData;
+    private double[] neighborsDistanceArr;
+    private double[] predictedValues;
     private int predictedStartIdx;
     private int predictedLastIdx;
 
@@ -43,7 +44,8 @@ class CollaborativeFiltering
 
         //Initialize array size.
         int size = neighborsNumbersFromKnn.Count();
-        neighborsData = new float[size][];
+        neighborsData = new double[size][];
+        neighborsDistanceArr = new double[size];
 
         //Read the Dataset.csv file, and save only the lines
         //that appears in the neighborsNumbersFromKnn array.
@@ -51,7 +53,7 @@ class CollaborativeFiltering
         getUseresData(dataset);
 
         //Initialize array size.
-        predictedValues = new float[useVectorCF.Length];
+        predictedValues = new double[useVectorCF.Length];
 
         //Initialize constants.
         predictedStartIdx = 6;
@@ -76,7 +78,7 @@ class CollaborativeFiltering
                 temp[Globals.bubble_in_space_column_number] =
                     Globals.getBubbleNumber(temp[Globals.bubble_in_space_column_number]).ToString();
 
-                neighborsData[arrayIndex] = Globals.convertToFloat(temp, 1, 3);
+                neighborsData[arrayIndex] = Globals.convertToDouble(temp, 1, 3);
                 arrayIndex++;
             }
             rowCounter++;
@@ -102,11 +104,25 @@ class CollaborativeFiltering
         int left = predictedStartIdx;
         int count = predictedLastIdx - predictedStartIdx;
 
-        var playerGameResult = Enumerable.Range(left, count)
-            .Select(x => useVectorCF[x])
-            .ToArray();
+        var playerGameResult = getSliceOfArray(useVectorCF, left, count);
 
         return getAverageValue(playerGameResult, predictedLastIdx - predictedStartIdx);
+    }
+
+    private double[] getSliceOfArray(double[] array, int leftIndex, int counter)
+    {
+        return Enumerable.Range(leftIndex, counter)
+            .Select(x => array[x])
+            .ToArray();
+    }
+
+    /// <summary>
+    /// The average value of game result values of player a neighbor.
+    /// </summary>
+    /// <returns></returns>
+    private float calculate_V_h(double[] neighborGameResult)
+    {
+        return getAverageValue(neighborGameResult, predictedLastIdx - predictedStartIdx);
     }
 
 
@@ -153,14 +169,42 @@ class CollaborativeFiltering
         }
     }
 
-    private float formulaUpperPart()
+    private double formulaUpperPart(int settingIndex)
     {
-        return (float)1.2;
+        double neighborAverage;
+        double neighborDistance;
+        double result = 0;
+        int leftIndex = predictedStartIdx;
+        int count = predictedLastIdx - predictedStartIdx;
+        var player = getSliceOfArray(useVectorCF, leftIndex, count);
+
+        //1.Calculate the average value of game result of every player's neighbor.
+        //2.Calculate the distance similarity value between player and his neighbor.
+        //3.Calculate the result. This is the return value.
+        for (int i = 0; i < neighborsNumbersFromKnn.Count(); i++)
+        {
+            var neighborData = Globals.GetRow(neighborsData, i);
+            var neighborGameResult = getSliceOfArray(neighborData, leftIndex, count);
+
+            neighborAverage = calculate_V_h(neighborGameResult);
+
+            neighborDistance = Globals.Euclidean_distance(neighborGameResult, player, count);
+
+            //Save this result for future use.
+            neighborsDistanceArr[i] = neighborDistance;
+
+            //#######################################################################
+            //Problem - it's give a negative result for every iteration.
+            result += (neighborDistance * (neighborData[settingIndex] - neighborAverage));
+            //#######################################################################
+        }
+
+        return result;
     }
 
-    private float formulaDownSide()
+    private double formulaDownSide()
     {
-        return (float)1.2;
+        return Math.Sqrt(neighborsDistanceArr.Sum());
     }
 
     /// <summary>
@@ -174,7 +218,9 @@ class CollaborativeFiltering
 
         for (int i = predictedStartIdx; i < predictedLastIdx; i++)
         {
-            predictedValues[i] = calculate_V_a() + formulaUpperPart() / formulaDownSide();
+            var up = formulaUpperPart(i);
+            var down = formulaDownSide();
+            predictedValues[i] = calculate_V_a() + (up / down);
         }
 
         Write_To_Csv_File();

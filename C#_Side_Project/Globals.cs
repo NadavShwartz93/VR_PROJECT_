@@ -159,4 +159,12 @@ public class Globals
                 .Select(x => matrix[rowNumber][x])
                 .ToArray();
     }
+
+    public static T[] GetCol<T>(T[][] matrix, int colNumber)
+    {
+        int count = matrix.Length;
+        return Enumerable.Range(0, count)
+                .Select(x => matrix[x][colNumber])
+                .ToArray();
+    }
 }

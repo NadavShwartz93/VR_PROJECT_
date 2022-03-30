@@ -6,9 +6,9 @@ using System.Linq;
 class CollaborativeFiltering
 {
     //Simulate User Vector
-    private double[] useVectorCF = new double[] {0, 158, 0.438, 1, 180, 3,
-        0.52, 0.4, 0.49, 0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
-    //private double[] useVectorCF = Globals.simulateUseVector;
+    /*private double[] useVectorCF = new double[] {0, 158, 0.438, 1, 180, 3,
+        0.52, 0.4, 0.49, 0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};*/
+    private double[] useVectorCF = Globals.simulateUseVector;
 
     private static CollaborativeFiltering instance = null;
     private int[] neighborsNumbersFromKnn;
@@ -85,28 +85,25 @@ class CollaborativeFiltering
         }
     }
 
-    private float getAverageValue(double[] v, int vector_size)
+    private float getAverageValue(double[] v)
     {
-        float counter = 0;
+        return (float)v.Average();
+
+        /*float counter = 0;
         for (int i = 0; i < vector_size; i++)
         {
             counter += (float)v[i];
         }
-        return counter / vector_size;
+        return counter / vector_size;*/
     }
 
     /// <summary>
     /// The average value of game result values for the player (patient).
     /// </summary>
     /// <returns></returns>
-    private float calculate_V_a()
+    private float calculate_V_a(int settingIndex)
     {
-        int left = predictedStartIdx;
-        int count = predictedLastIdx - predictedStartIdx;
-
-        var playerGameResult = getSliceOfArray(useVectorCF, left, count);
-
-        return getAverageValue(playerGameResult, predictedLastIdx - predictedStartIdx);
+        return (float)useVectorCF[settingIndex];
     }
 
     private double[] getSliceOfArray(double[] array, int leftIndex, int counter)
@@ -122,7 +119,7 @@ class CollaborativeFiltering
     /// <returns></returns>
     private float calculate_V_h(double[] neighborGameResult)
     {
-        return getAverageValue(neighborGameResult, predictedLastIdx - predictedStartIdx);
+        return getAverageValue(neighborGameResult);
     }
 
 
@@ -171,7 +168,7 @@ class CollaborativeFiltering
 
     private double formulaUpperPart(int settingIndex)
     {
-        double neighborAverage;
+        double V_h;
         double neighborDistance;
         double result = 0;
         int leftIndex = predictedStartIdx;
@@ -183,19 +180,23 @@ class CollaborativeFiltering
         //3.Calculate the result. This is the return value.
         for (int i = 0; i < neighborsNumbersFromKnn.Count(); i++)
         {
-            var neighborData = Globals.GetRow(neighborsData, i);
-            var neighborGameResult = getSliceOfArray(neighborData, leftIndex, count);
+            //var neighborData = Globals.GetRow(neighborsData, i);
+            var F_h = getSliceOfArray(Globals.GetRow(neighborsData, i),
+            leftIndex, count);
 
-            neighborAverage = calculate_V_h(neighborGameResult);
+            var neighborsSettingColumn = Globals.GetCol(neighborsData, settingIndex);
 
-            neighborDistance = Globals.Euclidean_distance(neighborGameResult, player, count);
+            V_h = calculate_V_h(neighborsSettingColumn);
+
+            neighborDistance = Globals.Euclidean_distance(F_h, player, count);
 
             //Save this result for future use.
             neighborsDistanceArr[i] = neighborDistance;
 
             //#######################################################################
             //Problem - it's give a negative result for every iteration.
-            result += (neighborDistance * (neighborData[settingIndex] - neighborAverage));
+            var F_h_i = player[settingIndex - leftIndex];
+            result += (neighborDistance * (F_h_i - V_h));
             //#######################################################################
         }
 
@@ -205,6 +206,11 @@ class CollaborativeFiltering
     private double formulaDownSide()
     {
         return Math.Sqrt(neighborsDistanceArr.Sum());
+    }
+
+    private double normalize(double data, int minimum, int maximum)
+    {
+        return (data - minimum) / (maximum - minimum);
     }
 
     /// <summary>
@@ -220,7 +226,12 @@ class CollaborativeFiltering
         {
             var up = formulaUpperPart(i);
             var down = formulaDownSide();
-            predictedValues[i] = calculate_V_a() + (up / down);
+
+            var temp = calculate_V_a(i) + (up / down);
+            //This is still have problem.
+            temp = normalize(temp, 0, 1);
+
+            predictedValues[i] = calculate_V_a(i) + (up / down);
         }
 
         Write_To_Csv_File();

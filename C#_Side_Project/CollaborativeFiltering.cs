@@ -6,8 +6,6 @@ using System.Linq;
 class CollaborativeFiltering
 {
     //Simulate User Vector
-    /*private double[] useVectorCF = new double[] {0, 158, 0.438, 1, 180, 3,
-        0.52, 0.4, 0.49, 0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};*/
     private double[] useVectorCF = Globals.simulateUseVector;
 
     private static CollaborativeFiltering instance = null;
@@ -88,13 +86,6 @@ class CollaborativeFiltering
     private float getAverageValue(double[] v)
     {
         return (float)v.Average();
-
-        /*float counter = 0;
-        for (int i = 0; i < vector_size; i++)
-        {
-            counter += (float)v[i];
-        }
-        return counter / vector_size;*/
     }
 
     /// <summary>
@@ -208,7 +199,7 @@ class CollaborativeFiltering
         return Math.Sqrt(neighborsDistanceArr.Sum());
     }
 
-    private double normalize(double data, int minimum, int maximum)
+    private double normalize(double data, double minimum, double maximum)
     {
         return (data - minimum) / (maximum - minimum);
     }
@@ -219,21 +210,30 @@ class CollaborativeFiltering
     /// </summary>
     public void calculate_CF()
     {
+        double[] arr = new double[6];
         getInputs();
         copyFirstValues();
 
         for (int i = predictedStartIdx; i < predictedLastIdx; i++)
         {
-            var up = formulaUpperPart(i);
-            var down = formulaDownSide();
+            if(i >= predictedStartIdx && i < 12)
+            {
+                var up = formulaUpperPart(i);
+                var down = formulaDownSide();
 
-            var temp = calculate_V_a(i) + (up / down);
-            //This is still have problem.
-            temp = normalize(temp, 0, 1);
+                var temp = calculate_V_a(i) + (up / down);
+                arr[i- predictedStartIdx] = calculate_V_a(i) + (up / down);
+            }
 
-            predictedValues[i] = calculate_V_a(i) + (up / down);
+            //For 4 last args.
+            predictedValues[i] = Globals.GetCol(neighborsData, i).Average();
         }
 
+        for (int i = predictedStartIdx; i < 12; i++)
+        {
+            predictedValues[i] = normalize(arr[i - predictedStartIdx], arr.Min()-2, arr.Max()+2);
+        }
+        
         Write_To_Csv_File();
     }
 }

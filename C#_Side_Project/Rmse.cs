@@ -28,7 +28,7 @@ class Rmse
     Pi - denotes the game setting feature that has been predicted.
     */
 
-    //This is just Conspet with simple example!
+    //This is just Conspectus with simple example!
     public float RmseCalc()
 
     {

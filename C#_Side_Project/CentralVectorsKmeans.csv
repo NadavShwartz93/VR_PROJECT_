@@ -1,4 +1,4 @@
-Id,Hand in Therapy (0 for left 1 for right),Height(cm),Arm Length,Standing (0 for no 1 for yes),Treatment Time (sec),Bubble in space,Velocity average (Best=1 Worst=0),Max velocity count (Best=1 Worst=0),Reaching time (Best=0 Worst=1),Path taken (Best=1 Worst=0),Jerkiness (Best=0 Worst=1),Bubble popped (Best=1 Worst=0),Total Score (Best=100 Worst=0),Bubble Position X,Bubble Position Y,Bubble Position Z,Bubble size,Distance between bubbles
-,0,158,0.4379998,1,180,2.631068,0.8184465,0.7307767,0.05475729,0.6775727,0.5069903,0.9999029,78.93767,0.6679611,0.4557282,0.3463106
-,0,158,0.4379999,1,180,2.75,0.595,0.2025,0.635,0.19,0.5666667,0.6891667,35.1275,0.5016667,0.4383333,0.3750001
-,1,182,0.5,1,60,2.275862,0.8313794,0.5627586,0.3207293,0.5263535,0.1505154,0.8493103,67.43173,0.785977,0.6406897,0.4920689
+Velocity average (Best=1 Worst=0),Max velocity count (Best=1 Worst=0),Reaching time (Best=0 Worst=1),Path taken (Best=1 Worst=0)
+0.8098837,0.8219766,0.02081729,0.79956
+0.5482051,0.1869231,0.6938683,0.173897
+0.9023256,0.4860465,0.2081395,0.3802353

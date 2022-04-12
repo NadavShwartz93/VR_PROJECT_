@@ -11,7 +11,6 @@ using System.IO;
 class Kmeans
 {
     private static Kmeans instance = null;
-    private int numCentralVec; // m1,m2.... mk
     private float[,] data_mat;
     private Dictionary<string, float> BubbleInSpace;
     private float[,] central_vectors;
@@ -19,15 +18,14 @@ class Kmeans
     private Dictionary<int, HashSet<int>> classification = new Dictionary<int, HashSet<int>>();
 
     //Constant variables that we are using in this class.
-    private const int numberOfColumns = 17;
+    private const int numberOfColumns = Globals.numOfParameters;
     private const int id_column_number = 0;
     private const int bubble_in_space_column_number = 6;
 
     //private const string Front-Bottom-Center = 0;
-    private Kmeans(int number_of_central_vectors)
+    private Kmeans()
     {
         instance = this;
-        this.numCentralVec = number_of_central_vectors;
 
         //Initialize the BubbleInSpace dictionary.
         this.Initialize_BubbleInSpace_dictionary();
@@ -52,7 +50,7 @@ class Kmeans
     {
         if (instance == null)
         {
-            instance = new Kmeans(11);
+            instance = new Kmeans();
         }
         return instance;
     }
@@ -65,9 +63,9 @@ class Kmeans
     {
         List<string[]> list = ReadLines(Globals.file_name_dataset);
 
-        data_mat = new float[list.Count, numberOfColumns - 1];
+        data_mat = new float[list.Count, numberOfColumns];
 
-        ParsingStringToFloat(list, data_mat);
+        parametersColumnsFromData(list, data_mat);
     }
 
     private List<string[]> ReadLines(string fileName)
@@ -94,25 +92,22 @@ class Kmeans
         return list;
     }
 
-    private void ParsingStringToFloat(List<string[]> list, float[,] mtx)
+    /// <summary>
+    /// This method parsing string to float value. 
+    /// the parsing perform on the parameters columns only.
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="mtx"></param>
+    private void parametersColumnsFromData(List<string[]> list, float[,] mtx)
     {
         int i = 0;
+        int start = Globals.firstParameterColumnNumber;
+
         foreach (string[] elem in list)
         {
             for (int j = 0; j < numberOfColumns; j++)
             {
-
-                if (j == id_column_number)
-                    continue;
-
-                //For columns in table ->where 6 == Bubble in space
-                if (j == bubble_in_space_column_number && BubbleInSpace.ContainsKey(elem[j]))
-                {
-                    mtx[i, j - 1] = BubbleInSpace[elem[j]];
-                }
-
-                else
-                    mtx[i, j - 1] = float.Parse(elem[j]);
+                mtx[i, j] = float.Parse(elem[start + j]);
             }
             i++;
         }
@@ -160,10 +155,20 @@ class Kmeans
     {
         //Local variables.
         const int row_size = num_of_classes;
-        const int col_size = numberOfColumns - 1;
+        const int col_size = numberOfColumns;
         var list = ReadLines(Globals.CentralVectorsKmeans_dataset);
         central_vectors = new float[row_size, col_size];
-        ParsingStringToFloat(list, central_vectors);
+
+
+        int j = 0;
+        foreach (string[] elem in list)
+        {
+            for (int i = 0; i < elem.Length; i++)
+            {
+                central_vectors[j, i] = float.Parse(elem[i]);
+            }
+            j++;
+        }
     }
 
     /// <summary>
@@ -272,13 +277,13 @@ class Kmeans
             //Pass the file-path and filename to the StreamWriter Constructor
             using (StreamWriter writetext = new StreamWriter(path))
             {
-                string header = "Id,Hand in Therapy (0 for left 1 for right),Height(cm),Arm Length,Standing (0 for no 1 for yes),Treatment Time (sec),Bubble in space,Velocity average (Best=1 Worst=0),Max velocity count (Best=1 Worst=0),Reaching time (Best=0 Worst=1),Path taken (Best=1 Worst=0),Jerkiness (Best=0 Worst=1),Bubble popped (Best=1 Worst=0),Total Score (Best=100 Worst=0),Bubble Position X,Bubble Position Y,Bubble Position Z,Bubble size,Distance between bubbles";
+                string header = "Velocity average (Best=1 Worst=0),Max velocity count (Best=1 Worst=0),Reaching time (Best=0 Worst=1),Path taken (Best=1 Worst=0)";
                 writetext.WriteLine(header);
 
                 //Write a line of text
                 for (int i = 0; i < central_vectors.GetLength(0); i++)
                 {
-                    string data_to_write = ",";
+                    string data_to_write = "";
                     data_to_write += string.Join(",", GetRow(central_vectors, i));
                     writetext.WriteLine(data_to_write);
                 }
@@ -293,9 +298,6 @@ class Kmeans
 
     private float[] GetRow(float[,] matrix, int rowNumber)
     {
-        /*return Enumerable.Range(0, matrix.GetLength(1))
-                .Select(x => matrix[rowNumber, x])
-                .ToArray();*/
         return Globals.GetRow(matrix, rowNumber);
     }
 
@@ -307,9 +309,9 @@ class Kmeans
         string s = "{\n " + string.Join(",\n", entries) + ",\n}";
 
         //Pass the file-path and filename to the StreamWriter Constructor
-        using (StreamWriter writetext = new StreamWriter(Globals.KmeansClusters))
+        using (StreamWriter writeText = new StreamWriter(Globals.KmeansClusters))
         {
-            writetext.WriteLine(s);
+            writeText.WriteLine(s);
         }
     }
 

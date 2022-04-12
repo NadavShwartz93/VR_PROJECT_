@@ -16,6 +16,16 @@ public class Globals
     public const string KmeansClusters = "KmeansClusters.txt";
     public const string KnnOutput = "KnnOutput.csv";
     public const string CfOutput = "CFOutput.csv";
+
+    /// <summary>
+    /// This variable represent the number of columns in the CentralVectorsKmeans.csv file.
+    /// </summary>
+    public const int numOfParameters = 4;
+    /// <summary>
+    /// This variable represent the column number of the first parameter
+    /// which is the Velocity average parameter.
+    /// </summary>
+    public const int firstParameterColumnNumber = 7;
     /// <summary>
     /// The number of clusters.
     /// </summary>
@@ -33,6 +43,7 @@ public class Globals
     /// This is the number of columns that the bubble_in_space is located.
     /// </summary>
     public const int bubble_in_space_column_number = 6;
+    
 
     ////// The area that the bubbles can show up//////////
     public const string FBCInSpace = "Front-Bottom-Center";

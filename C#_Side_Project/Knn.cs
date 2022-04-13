@@ -98,7 +98,7 @@ class KNN
     /// <summary>
     /// Convert the file KmeansClusters.txt from Json style to Dictionary structure
     /// </summary>
-    public static Dictionary<int, int[]> JsonToDictionary(string[] json)
+    private Dictionary<int, int[]> JsonToDictionary(string[] json)
     {
         Dictionary<int, int[]> values = new Dictionary<int, int[]>();
         for (int i = 1; i < json.Length - 1; i++) // iterate all besides, first and last character  "{" , "}"
@@ -204,7 +204,7 @@ class KNN
         return result;
     }
 
-    static int[] VoteMostClosestK(IndexAndDistance[] info, 
+    private int[] VoteMostClosestK(IndexAndDistance[] info, 
         double[][] trainData, int k)
     {
         int[] votes = new int[k];  // One cell per class

@@ -38,7 +38,7 @@ class CollaborativeFiltering
         //Read the KnnOutput.csv file and save it in int array.
         string[] row = File.ReadAllLines(Globals.KnnOutputFile);
         row = row[0].Split(',');
-        neighborsNumbersFromKnn = Globals.convertToInt(row, 0, 1);
+        neighborsNumbersFromKnn = Globals.convertToInt(row, 0);
 
         //Initialize array size.
         int size = neighborsNumbersFromKnn.Count();
@@ -76,7 +76,7 @@ class CollaborativeFiltering
                 temp[Globals.bubble_in_space_column_number] =
                     Globals.getBubbleNumber(temp[Globals.bubble_in_space_column_number]).ToString();
 
-                neighborsData[arrayIndex] = Globals.convertToDouble(temp, 1);
+                neighborsData[arrayIndex] = Globals.convertToDouble(temp, 1, 3);
                 arrayIndex++;
             }
             rowCounter++;

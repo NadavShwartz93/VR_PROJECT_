@@ -88,9 +88,15 @@ public class Globals
     }
 
     //Conversion Methods
-    public static double[] convertToDouble(string[] stringRow, int startIdx)
+    public static double[] convertToDouble(string[] stringRow, int startIdx, 
+        int numOfIndexToRemove = -1)
     {
-        var len = stringRow.Length;
+        int len;
+        if (numOfIndexToRemove == -1)
+            len = stringRow.Length;
+        else
+            len = stringRow.Length - numOfIndexToRemove;
+
         return Enumerable.Range(startIdx, len).
             Select(x => double.Parse(stringRow[x])).ToArray();
     }
@@ -100,10 +106,10 @@ public class Globals
     /// </summary>
     /// <param name="stringRow"></param>
     /// <returns>int array.</returns>
-    public static int[] convertToInt(string[] stringRow, int startIdx, int lastIdx)
+    public static int[] convertToInt(string[] stringRow, int startIdx)
     {
         var len = stringRow.Length;
-        return Enumerable.Range(startIdx, len - lastIdx)
+        return Enumerable.Range(startIdx, len)
             .Select(x => int.Parse(stringRow[x]))
             .ToArray();
     }

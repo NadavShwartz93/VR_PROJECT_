@@ -36,7 +36,7 @@ class CollaborativeFiltering
     private void getInputs()
     {
         //Read the KnnOutput.csv file and save it in int array.
-        string[] row = File.ReadAllLines(Globals.KnnOutput);
+        string[] row = File.ReadAllLines(Globals.KnnOutputFile);
         row = row[0].Split(',');
         neighborsNumbersFromKnn = Globals.convertToInt(row, 0, 1);
 
@@ -47,7 +47,7 @@ class CollaborativeFiltering
 
         //Read the Dataset.csv file, and save only the lines
         //that appears in the neighborsNumbersFromKnn array.
-        string[] dataset = File.ReadAllLines(Globals.file_name_dataset);
+        string[] dataset = File.ReadAllLines(Globals.datasetFile);
         getUseresData(dataset);
 
         //Initialize array size.
@@ -76,7 +76,7 @@ class CollaborativeFiltering
                 temp[Globals.bubble_in_space_column_number] =
                     Globals.getBubbleNumber(temp[Globals.bubble_in_space_column_number]).ToString();
 
-                neighborsData[arrayIndex] = Globals.convertToDouble(temp, 1, 3);
+                neighborsData[arrayIndex] = Globals.convertToDouble(temp, 1);
                 arrayIndex++;
             }
             rowCounter++;
@@ -128,7 +128,7 @@ class CollaborativeFiltering
 
     private void Write_To_Csv_File()
     {
-        string path = Globals.CfOutput;
+        string path = Globals.CfOutputFile;
 
         try
         {

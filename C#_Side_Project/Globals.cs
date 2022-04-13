@@ -11,11 +11,11 @@ public class Globals
     public static double[] simulateUseVector = new double[] {0, 158, 0.438, 1, 180, 3,
         0.52, 0.4, 0.49, 0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
 
-    public const string file_name_dataset = "Dataset.csv";
-    public const string CentralVectorsKmeans_dataset = "CentralVectorsKmeans.csv";
-    public const string KmeansClusters = "KmeansClusters.txt";
-    public const string KnnOutput = "KnnOutput.csv";
-    public const string CfOutput = "CFOutput.csv";
+    public const string datasetFile = "Dataset.csv";
+    public const string CentralVectorsKmeansFile = "CentralVectorsKmeans.csv";
+    public const string KmeansClustersFile = "KmeansClusters.txt";
+    public const string KnnOutputFile = "KnnOutput.csv";
+    public const string CfOutputFile = "CFOutput.csv";
 
     /// <summary>
     /// This variable represent the number of columns in the CentralVectorsKmeans.csv file.
@@ -88,10 +88,10 @@ public class Globals
     }
 
     //Conversion Methods
-    public static double[] convertToDouble(string[] stringRow, int startIdx, int lastIdx)
+    public static double[] convertToDouble(string[] stringRow, int startIdx)
     {
         var len = stringRow.Length;
-        return Enumerable.Range(startIdx, len - lastIdx).
+        return Enumerable.Range(startIdx, len).
             Select(x => double.Parse(stringRow[x])).ToArray();
     }
 
@@ -168,6 +168,21 @@ public class Globals
         int count = matrix[0].Length;
         return Enumerable.Range(0, count)
                 .Select(x => matrix[rowNumber][x])
+                .ToArray();
+    }
+
+    /// <summary>
+    /// This method return a specific range of elements that start in start index.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="array"></param>
+    /// <param name="rowNumber"></param>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    public static T[] GetRangeFromArr<T>(T[] array, int start, int count)
+    {
+        return Enumerable.Range(start, count)
+                .Select(x => array[x])
                 .ToArray();
     }
 

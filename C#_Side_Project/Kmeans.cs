@@ -61,7 +61,7 @@ class Kmeans
     /// </summary>
     private void Read_file_to_array()
     {
-        List<string[]> list = ReadLines(Globals.file_name_dataset);
+        List<string[]> list = ReadLines(Globals.datasetFile);
 
         data_mat = new float[list.Count, numberOfColumns];
 
@@ -156,7 +156,7 @@ class Kmeans
         //Local variables.
         const int row_size = num_of_classes;
         const int col_size = numberOfColumns;
-        var list = ReadLines(Globals.CentralVectorsKmeans_dataset);
+        var list = ReadLines(Globals.CentralVectorsKmeansFile);
         central_vectors = new float[row_size, col_size];
 
 
@@ -271,7 +271,7 @@ class Kmeans
 
     private void Write_To_Csv_File()
     {
-        string path = Globals.CentralVectorsKmeans_dataset;
+        string path = Globals.CentralVectorsKmeansFile;
         try
         {
             //Pass the file-path and filename to the StreamWriter Constructor
@@ -309,7 +309,7 @@ class Kmeans
         string s = "{\n " + string.Join(",\n", entries) + ",\n}";
 
         //Pass the file-path and filename to the StreamWriter Constructor
-        using (StreamWriter writeText = new StreamWriter(Globals.KmeansClusters))
+        using (StreamWriter writeText = new StreamWriter(Globals.KmeansClustersFile))
         {
             writeText.WriteLine(s);
         }

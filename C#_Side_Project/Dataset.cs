@@ -105,10 +105,10 @@ public class Dataset /*: MonoBehaviour*/
     {
         try
         {
-            if (File.Exists(Globals.datasetFile))
+            if (File.Exists(Globals.datasetFilePath))
             {
                 //Pass the filepath and filename to the StreamWriter Constructor
-                using (StreamWriter writetext = File.AppendText(Globals.datasetFile))
+                using (StreamWriter writetext = File.AppendText(Globals.datasetFilePath))
                 {
                     //Write a line of text
                     writetext.WriteLine(data_to_write);
@@ -118,7 +118,7 @@ public class Dataset /*: MonoBehaviour*/
             }
             else
             {
-                using (StreamWriter writetext = new StreamWriter(Globals.datasetFile))
+                using (StreamWriter writetext = new StreamWriter(Globals.datasetFilePath))
                 {
                     string heading = "Id, Hand in Therapy (0 for left 1 for right), Height(cm), " +
                         "Arm Length, Standing (0 for no 1 for yes), Treatment Time (sec), Bubble in space, Velocity average (Best=1 Worst=0), " +

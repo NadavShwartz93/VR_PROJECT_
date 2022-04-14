@@ -11,12 +11,17 @@ public class Globals
     public static double[] simulateUseVector = new double[] {0, 158, 0.438, 1, 180, 3,
         0.52, 0.4, 0.49, 0.03, 0.04, 0.67, 41, 0.43, 0.67, 0.4};
 
-    public const string datasetFile = "Dataset.csv";
-    public const string CentralVectorsKmeansFile = "CentralVectorsKmeans.csv";
-    public const string KmeansClustersFile = "KmeansClusters.txt";
-    public const string KnnOutputFile = "KnnOutput.csv";
-    public const string CfOutputFile = "CFOutput.csv";
+    public const string datasetFilePath = "Dataset.csv";
+    public const string CentralVectorsKmeansFilePath = "CentralVectorsKmeans.csv";
+    public const string KmeansClustersFilePath = "KmeansClusters.txt";
+    public const string KnnOutputFilePath = "KnnOutput.csv";
+    public const string CfOutputFilePath = "CFOutput.csv";
 
+
+    /// <summary>
+    /// This variable represent the number of training iteration of the Kmeans algorithm.
+    /// </summary>
+    public const int numOfTrainingIteration = 10;
     /// <summary>
     /// This variable represent the number of columns in the CentralVectorsKmeans.csv file.
     /// </summary>

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 
 
-
 /// Based on: https://docs.microsoft.com/en-us/archive/msdn-magazine/2017/december/test-run-understanding-k-nn-classification-using-csharp#wrapping-up
 class KNN
 {
@@ -15,12 +14,29 @@ class KNN
 
     private Dictionary<int, int[]> kmeansClusters = new Dictionary<int, int[]>();
 
+    private double[][] CentralVectorskmeans;
+
+    private string[] dataset;
+
     private KNN()
     {
         instance = this;
 
         //Initialize the useVectorKmeans array.
         this.getParametersColumnsFromData();
+
+        //Prepare input for KNN .
+        //////////////////////////////////////////
+
+        //Read the CentralVectorsKmeans.csv file into double array.
+        this.CentralVectorskmeans = readCentralVector(Globals.CentralVectorsKmeansFilePath,
+            Globals.num_of_classes);
+
+        //Read the KmeansClusters.txt file into Dictionary.
+        string[] result = File.ReadAllLines(Globals.KmeansClustersFilePath);
+        kmeansClusters = JsonToDictionary(result);
+
+        this.dataset = File.ReadAllLines(Globals.datasetFilePath);
     }
 
     public static KNN Get_instance()
@@ -117,21 +133,9 @@ class KNN
     {
         //General constants.
         const int numClasses = Globals.num_of_classes; //In this case the classes are 0 || 1 || 2 ...
-        //int numOfColums = Globals.numOfColumnsInDataSet;
         int numOfColums = Globals.numOfParameters;
         int k = Globals.K;
 
-        //Prepare input for KNN .
-
-        //Read the CentralVectorsKmeans.csv file into double array.
-        double[][] CentralVectorskmeans = readCentralVector(Globals.CentralVectorsKmeansFile,
-            numClasses);
-
-        //Read the KmeansClusters.txt file into Dictionary.
-        string[] result = File.ReadAllLines(Globals.KmeansClustersFile);
-        kmeansClusters = JsonToDictionary(result);
-
-        string[] dataset = File.ReadAllLines(Globals.datasetFile);
 
         //Find the most similar vectors in the predictedClass
         //and write the data to knnOutput.csv
@@ -144,7 +148,7 @@ class KNN
         int[] predictedVectors = Classify(useVectorKmeans, datasetVectors, numClasses,
         numOfColums, k, true); //The predicted vectors inside the predited class                          
 
-        Write_To_Csv_File(Globals.KnnOutputFile, predictedVectors);
+        Write_To_Csv_File(Globals.KnnOutputFilePath, predictedVectors);
         ///////////////////////////////////////////////////
     }
 
@@ -156,11 +160,18 @@ class KNN
         int i = 0;
         double[][] datVec = new double[rows.Length][];
 
+        //This flag is use for skip the first line of dataset.
+        bool headerline = true;
         foreach (string line in dataset)
         {
-            if (rowInDataSet != 0 && rowInDataSet == rows[arrayrows])
+            if (headerline)
             {
-                var temp = Globals.GetRangeFromArr<string>(line.Split(','), 
+                headerline = false;
+                continue;
+            }
+            else if (rowInDataSet == rows[arrayrows])
+            {
+                var temp = Globals.GetRangeFromArr<string>(line.Split(','),
                     Globals.firstParameterColumnNumber, Globals.numOfParameters);
 
                 datVec[i] = Globals.convertToDouble(temp, 0);
@@ -204,7 +215,7 @@ class KNN
         return result;
     }
 
-    private int[] VoteMostClosestK(IndexAndDistance[] info, 
+    private int[] VoteMostClosestK(IndexAndDistance[] info,
         double[][] trainData, int k)
     {
         int[] votes = new int[k];  // One cell per class

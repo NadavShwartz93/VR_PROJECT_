@@ -11,7 +11,7 @@ class Runner
 
     public static void Main(string[] args)
     {
-        Kmeans.Get_instance().Train(10);
+        Kmeans.Get_instance().Train(Globals.numOfTrainingIteration);
 
         KNN.Get_instance().start();
 

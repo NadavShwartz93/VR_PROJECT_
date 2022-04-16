@@ -15,7 +15,7 @@ class Runner
 
         KNN.Get_instance().start();
 
-        CollaborativeFiltering.Get_instance().calculate_CF();
+        //CollaborativeFiltering.Get_instance().calculate_CF();
 
         Console.WriteLine("Process finished!\n");
 

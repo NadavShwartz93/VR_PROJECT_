@@ -142,50 +142,10 @@ class KNN
         int[] predictedClass = Classify(useVectorKmeans, CentralVectorskmeans,
             numClasses, numOfColums); //The predicted class
 
-        double[][] datasetVectors = CreateSpesificVectors(dataset,
-            kmeansClusters[predictedClass[0]]);
-
-        int[] predictedVectors = Classify(useVectorKmeans, datasetVectors, numClasses,
-        numOfColums, k, true); //The predicted vectors inside the predited class                          
-
-        Write_To_Csv_File(Globals.KnnOutputFilePath, predictedVectors);
+        Write_To_Csv_File(Globals.KnnOutputFilePath, predictedClass);
         ///////////////////////////////////////////////////
-    }
 
-    private double[][] CreateSpesificVectors(string[] dataset, int[] rows)
-    {
-        //local variable.
-        int rowInDataSet = 0;
-        int arrayrows = 0;
-        int i = 0;
-        double[][] datVec = new double[rows.Length][];
-
-        //This flag is use for skip the first line of dataset.
-        bool headerline = true;
-        foreach (string line in dataset)
-        {
-            if (headerline)
-            {
-                headerline = false;
-                continue;
-            }
-            else if (rowInDataSet == rows[arrayrows])
-            {
-                var temp = Globals.GetRangeFromArr<string>(line.Split(','),
-                    Globals.firstParameterColumnNumber, Globals.numOfParameters);
-
-                datVec[i] = Globals.convertToDouble(temp, 0);
-
-                i++;
-
-                if (rows.Length > arrayrows + 1) //Terminate overflow in rows[arrayrows]
-                    arrayrows++;
-            }
-
-            rowInDataSet++;
-        }
-
-        return datVec;
+        BubblePosition.getInstance().calculateBubblePosition(predictedClass);
     }
 
     private int[] Classify(double[] unknown, double[][] trainData, int numClasses,
@@ -197,7 +157,7 @@ class KNN
         {
             IndexAndDistance curr = new IndexAndDistance();
             double dist = Distance(unknown, trainData[i]);
-            curr.idx = i;
+            curr.index = i;
             curr.dist = dist;
             info[i] = curr;
         }
@@ -206,28 +166,20 @@ class KNN
         // will be in the fisrt index 
         Array.Sort(info);
 
-        if (findFirstK)
-            return VoteMostClosestK(info, trainData, k);
+        return getClasses(info);
+    }
 
-        //int[] result = VoteMostClosetClass(info, trainData, numClasses, numOfColums);
-        int[] result = new int[1];
-        result[0] = info[0].idx;
+    private int[] getClasses(IndexAndDistance[] info)
+    {
+        int[] result = new int[info.Length];
+        for (int i = 0; i < info.Length; i++)
+        {
+            result[i] = info[i].index;
+        }
+
         return result;
     }
 
-    private int[] VoteMostClosestK(IndexAndDistance[] info,
-        double[][] trainData, int k)
-    {
-        int[] votes = new int[k];  // One cell per class
-        for (int i = 0; i < k; ++i)
-        {       // Just first k
-            votes[i] = info[i].idx;
-        }
-
-        Array.Sort(votes);//!!
-
-        return votes;
-    }
 
     /// <summary>
     /// Calculation of Euclidean distance.
@@ -245,9 +197,13 @@ class KNN
     /// </summary>
     private class IndexAndDistance : IComparable<IndexAndDistance>
     {
-        public int idx;  // Index of a training item
-        public double dist;  // To unknown
-                             // Need to sort these to find k closest
+        
+        /// <summary>
+        /// Index of a training item
+        /// </summary>
+        public int index { get; set; }
+        public double dist { get; set; }  // To unknown
+                                          // Need to sort these to find k closest
         public int CompareTo(IndexAndDistance other)
         {
             if (this.dist < other.dist) return -1;

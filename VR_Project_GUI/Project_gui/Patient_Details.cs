@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace Project_gui
 {
-    public partial class Patient_Detailes : Form
+    public partial class Patient_Details : Form
     {
-        private static Patient_Detailes P_D= null;
+        private static Patient_Details P_D= null;
         private static Game_Settings1 gs1 = null;
 
         // This string will hold the Patient Details.
@@ -28,7 +28,7 @@ namespace Project_gui
         // This boolean flag check that only 1 period is entered and only number.
         private bool period_number_ = false;
 
-        public Patient_Detailes()
+        public Patient_Details()
         {
             InitializeComponent();
             this.Hand_CheckBox.BackColor = System.Drawing.Color.Green;
@@ -59,7 +59,7 @@ namespace Project_gui
         {
             Patient_data = "";
             Patient_data += "Hand in Therapy, Id, First Name, Last Name, Height (cm), Arm Length, ";
-            Patient_data += "Standing, Treatment Time (sec)\n";
+            Patient_data += "Standing, Treatment Time (sec), Area Score 0, Area Score 1, Area Score 2\n";
             Patient_data += Hand_CheckBox.Text + ", " + id_textBox.Text + ", " + First_Name_textBox.Text + ", ";
             Patient_data += Last_Name_textBox.Text + ", " + Height_textBox.Text + ", ";
             Patient_data += Arm_Length_textBox.Text + ", " + Standing_CheckBox.Text + ", ";
@@ -72,10 +72,10 @@ namespace Project_gui
         }
 
         // Return instance of this class, and create an instance if needed.
-        public static Patient_Detailes get_Instance()
+        public static Patient_Details get_Instance()
         {
             if (P_D == null)
-                P_D = new Patient_Detailes();
+                P_D = new Patient_Details();
             return P_D;
         }
 
@@ -215,6 +215,15 @@ namespace Project_gui
                 period_number_ = false;
             else if(nonNumberEntered == false)
                 period_number_ = true;
+        }
+
+        public string get_id_textBox()
+        {
+            return id_textBox.Text;
+        }
+
+        private void Patient_Details_FromClosing(object sender, FormClosingEventArgs e)
+        {
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Project_gui
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Patient_Detailes());        
+            Application.Run(new Patient_Details());        
         }
     }
 }

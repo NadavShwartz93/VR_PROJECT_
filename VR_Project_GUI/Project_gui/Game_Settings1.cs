@@ -47,7 +47,7 @@ namespace Project_gui
         private void click_back_button(object sender, EventArgs e)
         {
             this.Visible = false;
-            Patient_Detailes.get_Instance().Visible = true;
+            Patient_Details.get_Instance().Visible = true;
         }
 
         //Return instance of this class, and create an instantion if needed.
@@ -97,6 +97,11 @@ namespace Project_gui
          private void label3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Game_Settings_FromClosing(object sender, FormClosingEventArgs e)
+        {
+            Patient_Details.get_Instance().Close();
         }
     }
 }

@@ -244,6 +244,7 @@ namespace Project_gui
             this.adjust_Radio_Button.TabStop = true;
             this.adjust_Radio_Button.Text = "Adjust";
             this.adjust_Radio_Button.UseVisualStyleBackColor = true;
+            this.adjust_Radio_Button.Click += new System.EventHandler(this.Adjust_RadioButton_Click);
             // 
             // default_Radio_Button
             // 
@@ -257,6 +258,7 @@ namespace Project_gui
             this.default_Radio_Button.TabStop = true;
             this.default_Radio_Button.Text = "Default";
             this.default_Radio_Button.UseVisualStyleBackColor = true;
+            this.default_Radio_Button.Click += new System.EventHandler(this.Default_RadioButton_Click);
             // 
             // label1
             // 
@@ -645,6 +647,7 @@ namespace Project_gui
             this.Name = "Game_Settings2";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Game Settings";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Game_Setting2_FromClosing);
             this.Load += new System.EventHandler(this.Game_Settings2_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);

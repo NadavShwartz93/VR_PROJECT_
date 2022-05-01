@@ -8,11 +8,89 @@ namespace Project_gui
     {
         private string Patient_Results_File_Name = Globals.file_name_Patient_Results;
         private string Patient_Detailes_File_Name = Globals.file_Name_Patient_Detailes;
+        private int[] areaScoreArr;
+        
 
         public Game_Settings2()
         {
             InitializeComponent();
+            areaScoreArr = new int[Globals.num_of_classes];
+            if (this.isIdExistInFile())
+            {
+                tln_Label.Text = areaScoreArr[0].ToString();
+                tln_Track_Bar.Value = areaScoreArr[0];
+
+                trn_Label.Text = areaScoreArr[1].ToString();
+                trn_Track_Bar.Value = areaScoreArr[1];
+
+                bln_Label.Text = areaScoreArr[2].ToString();
+                bln_Track_Bar.Value = areaScoreArr[2];
+            }
+
+            default_Radio_Button.Checked = true;
+            changeComponentStatus(false);
         }
+
+        private void changeComponentStatus(bool Status)
+        {
+            tln_Track_Bar.Enabled = Status;
+            tln_Label.Enabled = Status;
+
+            trn_Track_Bar.Enabled = Status;
+            trn_Label.Enabled = Status;
+
+            bln_Track_Bar.Enabled = Status;
+            bln_Label.Enabled = Status;
+
+            brn_Track_Bar.Enabled = Status;
+            brn_Label.Enabled = Status;
+
+            tlf_Track_Bar.Enabled = Status;
+            tlf_Label.Enabled = Status;
+
+            trf_Track_Bar.Enabled = Status;
+            trf_Label.Enabled = Status;
+
+            blf_Track_Bar.Enabled = Status;
+            blf_Label.Enabled = Status;
+
+            brf_Track_Bar.Enabled = Status;
+            brf_Label.Enabled = Status;
+        }
+
+        //This method check if the PatientDetails.csv is exist
+        private bool isIdExistInFile()
+        {
+            //The case PatientDetails.csv does not exist
+            if (!File.Exists(Globals.file_Name_Patient_Detailes))
+                return false;
+
+            var guiId = Patient_Details.get_Instance().get_id_textBox().Trim();
+            string IdFromFile;
+            bool flag = false;
+            using (var reader = new StreamReader(Globals.file_Name_Patient_Detailes))
+            {
+                const int IdColumn = 1;
+                reader.ReadLine();
+                var list = reader.ReadLine().Split(',');
+                IdFromFile = list[IdColumn].Trim();
+
+                //Read the area score values.
+                if (guiId == IdFromFile)
+                {
+                    for (int i = 0; i < Globals.num_of_classes; i++)
+                    {
+                        areaScoreArr[i] = (int)(float.Parse(list[i + 8]) * 10);
+                    }
+                    flag = true;
+                }
+                else
+                    flag = false;
+            }
+            return flag;
+        }
+
+
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -34,33 +112,39 @@ namespace Project_gui
 
         }
 
+        private string addAreaSocreDataToCSV()
+        {
+            string str = Patient_Details.get_Data();
+
+            float sum = tln_Track_Bar.Value + trn_Track_Bar.Value + bln_Track_Bar.Value;
+            str += ", " + tln_Track_Bar.Value / sum;
+            str += ", " + trn_Track_Bar.Value / sum;
+            str += ", " + bln_Track_Bar.Value / sum;
+
+            return str;
+        }
+
         // Approve Game Settings
         private void click_approve_button(object sender, EventArgs e)
         {
-            /*if (!Validation.isPathExist())
-            {
-                return;
-            }*/
                 //Write the Patient Details to PatientDetails.csv 
-                write_To_Csv_File(Patient_Detailes.get_Data(), Patient_Detailes_File_Name);
+
+                write_To_Csv_File(this.addAreaSocreDataToCSV(), Patient_Detailes_File_Name);
 
                 //Close the open forms.
-                close_all_WinForm();
+                this.close_all_WinForm();
 
                 //Game_Settings1 GUI don't close with close_all_WinForm() so I close it.
                 Game_Settings1.get_Instance().Close();
             
         }
 
-        // This method close all the open form in the application.
-        private void close_all_WinForm()
+        void close_all_WinForm()
         {
-            var list_of_forms = Application.OpenForms;
+            Patient_Details.get_Instance().Close();
 
-            for (int i = 0; i < list_of_forms.Count; i++)
-                list_of_forms[i].Close();
+            Game_Settings1.get_Instance().Close();
         }
-
         // Go back to the main Game Settings Screen
         private void click_back_button(object sender, EventArgs e)
         {
@@ -199,6 +283,23 @@ namespace Project_gui
         private void Game_Settings2_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void Adjust_RadioButton_Click(object sender, EventArgs e)
+        {
+            this.changeComponentStatus(true);
+        }
+
+        private void Default_RadioButton_Click(object sender, EventArgs e)
+        {
+            this.changeComponentStatus(false);
+        }
+
+        private void Game_Setting2_FromClosing(object sender, FormClosingEventArgs e)
+        {
+            Patient_Details.get_Instance().Close();
+
+            Game_Settings1.get_Instance().Close();
         }
     }
 }

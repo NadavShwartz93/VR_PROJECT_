@@ -1,7 +1,7 @@
 ﻿
 namespace Project_gui
 {
-    partial class Patient_Detailes
+    partial class Patient_Details
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace Project_gui
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Patient_Detailes));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Patient_Details));
             this.label1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.Hand_in_Therapy_label2 = new System.Windows.Forms.Label();
@@ -303,7 +303,7 @@ namespace Project_gui
             this.progressBar1.TabIndex = 8;
             this.progressBar1.Value = 33;
             // 
-            // Patient_Detailes
+            // Patient_Details
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -316,9 +316,10 @@ namespace Project_gui
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Patient_Detailes";
+            this.Name = "Patient_Details";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Patient Details";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Patient_Details_FromClosing);
             this.Load += new System.EventHandler(this.Patient_Detailes_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

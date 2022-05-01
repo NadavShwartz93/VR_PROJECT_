@@ -31,6 +31,9 @@ public class Globals
     public static readonly string CfOutputFilePath =
         Path.Combine(Application.persistentDataPath, "CFOutput.csv");
 
+    public static readonly string PatientDetailsFilePath =
+        Path.Combine(Application.persistentDataPath, "PatientDetails.csv");
+
     /// <summary>
     /// This flag check if this is the first game round.
     /// </summary>
@@ -66,6 +69,10 @@ public class Globals
     /// </summary>
     public const int bubble_in_space_column_number = 6;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public static int[] numOfApperancce = new int[num_of_classes];
 
     ////// The area that the bubbles can show up//////////
     public const string FBCInSpace = "Front-Bottom-Center";

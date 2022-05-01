@@ -25,9 +25,6 @@ class KNN
     {
         instance = this;
 
-        //Initialize the useVectorKmeans array.
-        this.getParametersColumnsFromData();
-
         //Prepare input for KNN .
         //////////////////////////////////////////
 
@@ -61,7 +58,6 @@ class KNN
         {
             useVectorKmeans[j] = Globals.simulateUseVector[start + j];
         }
-
     }
 
     private void Write_To_Csv_File(string path, int[] simUsers)
@@ -139,6 +135,8 @@ class KNN
         int numOfColums = Globals.numOfParameters;
         int k = Globals.K;
 
+        //Initialize the useVectorKmeans array.
+        this.getParametersColumnsFromData();
 
         //Find the most similar vectors in the predictedClass
         //and write the data to knnOutput.csv
@@ -147,6 +145,16 @@ class KNN
 
         Write_To_Csv_File(Globals.KnnOutputFilePath, predictedClass);
         ///////////////////////////////////////////////////
+
+        //Increment the array in the 0 place by one in order to find the probability (weights).
+        Globals.numOfApperancce[predictedClass[0]] += 1;
+
+        for (int i = 0; i < Globals.num_of_classes; i++)
+        {
+            Debug.Log(i + ". is equal:  " + Globals.numOfApperancce[i]);
+        }
+        
+        
 
         BubblePosition.getInstance().calculateBubblePosition(predictedClass);
 

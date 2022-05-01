@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 using System.IO;
 
@@ -9,7 +10,7 @@ public class CSVReader : MonoBehaviour
 {
 
     public TextAsset textAssetData;
-    public static string[] details = new string[8];
+    public static string[] details = new string[8 + Globals.num_of_classes];
     public static bool title = true;
 
     [System.Serializable]
@@ -52,6 +53,12 @@ public class CSVReader : MonoBehaviour
             details[5] = values[5];
             details[6] = values[6];
             details[7] = values[7];
+
+            //Read the Area Score data. 
+            details[8] = values[8];
+            details[9] = values[9];
+            details[10] = values[10];
+
             Debug.Log("The patient details are: " + details[0] + " "
             + details[1] + " " + details[2] + " "
             + details[3] + " " + details[4] + " "
@@ -85,12 +92,12 @@ public class CSVReader : MonoBehaviour
         {
             if (title)
             {
-                writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", "", "", "Patient:", 
+                writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", "", "", "Patient:",
                     ButtonListener.patientDetails[2], ButtonListener.patientDetails[3], "", "", "", "", "", "");
-                writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", "Velocity average (Best=1 Worst=0)", 
-                    "Max velocity count (Best=1 Worst=0)", "Reaching time (Best=0 Worst=1)", 
-                    "Path taken (Best=1 Worst=0)", "Jerkiness (Best=0 Worst=1)", "Bubble popped (Best=1 Worst=0)", 
-                    "Total Score (Best=100 Worst=0)", "Bubble Position X", "Bubble Position Y", "Bubble Position Z", 
+                writer.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", "Velocity average (Best=1 Worst=0)",
+                    "Max velocity count (Best=1 Worst=0)", "Reaching time (Best=0 Worst=1)",
+                    "Path taken (Best=1 Worst=0)", "Jerkiness (Best=0 Worst=1)", "Bubble popped (Best=1 Worst=0)",
+                    "Total Score (Best=100 Worst=0)", "Bubble Position X", "Bubble Position Y", "Bubble Position Z",
                     "Bubble in space");
                 title = false;
             }
@@ -135,6 +142,45 @@ public class CSVReader : MonoBehaviour
             KNN.Get_instance().start();*/
 
             #endregion
+        }
+
+    }
+
+
+    public static void writeToPatientDetails()
+    {
+        string Patient_data = "";
+        Patient_data += "Hand in Therapy, Id, First Name, Last Name, Height (cm), Arm Length, ";
+        Patient_data += "Standing, Treatment Time (sec), Area Score 0, Area Score 1, Area Score 2\n";
+
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(Globals.PatientDetailsFilePath))
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    Patient_data += details[i];
+                    Patient_data += ",";
+                }
+
+                float sumOfArray = Globals.numOfApperancce.Sum();
+                for (int i = 0; i < Globals.num_of_classes; i++)
+                {
+                    var temp = Globals.numOfApperancce[i] / (sumOfArray);
+                    Patient_data += temp;
+                    Debug.Log("Class " + i + " equal = " + temp);
+                    Patient_data += ",";
+                }
+
+                //Write The data to the .csv file.
+                writer.WriteLine(Patient_data);
+
+                Debug.Log("Write PatientDetails.csv .");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Exception: " + e.Message);
         }
 
     }

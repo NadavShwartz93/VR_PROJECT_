@@ -25,6 +25,9 @@ public class EndGame : MonoBehaviour
         Debug.Log("Run the Kmeans.cs in order to generate: KmeansClusters.txt and update CentralVectorsKmeans.");
         Kmeans.Get_instance().Train(Globals.numOfTrainingIteration);
 
+        //update the PatientDetails.csv file
+        CSVReader.writeToPatientDetails();
+
         #endregion
 
         Debug.Log("EndGame.cs finished!!!");

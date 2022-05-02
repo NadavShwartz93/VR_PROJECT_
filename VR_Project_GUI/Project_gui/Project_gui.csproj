@@ -77,11 +77,11 @@
       <DependentUpon>Game_Settings1.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
-    <Compile Include="Patient_Detailes.cs">
+    <Compile Include="Patient_Details.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Patient_Detailes.Designer.cs">
-      <DependentUpon>Patient_Detailes.cs</DependentUpon>
+    <Compile Include="Patient_Details.Designer.cs">
+      <DependentUpon>Patient_Details.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -92,8 +92,8 @@
     <EmbeddedResource Include="Game_Settings1.resx">
       <DependentUpon>Game_Settings1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Patient_Detailes.resx">
-      <DependentUpon>Patient_Detailes.cs</DependentUpon>
+    <EmbeddedResource Include="Patient_Details.resx">
+      <DependentUpon>Patient_Details.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

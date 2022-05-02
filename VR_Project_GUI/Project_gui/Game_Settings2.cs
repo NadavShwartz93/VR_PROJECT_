@@ -9,7 +9,7 @@ namespace Project_gui
         private string Patient_Results_File_Name = Globals.file_name_Patient_Results;
         private string Patient_Detailes_File_Name = Globals.file_Name_Patient_Detailes;
         private int[] areaScoreArr;
-        
+
 
         public Game_Settings2()
         {
@@ -80,7 +80,12 @@ namespace Project_gui
                 {
                     for (int i = 0; i < Globals.num_of_classes; i++)
                     {
-                        areaScoreArr[i] = (int)(float.Parse(list[i + 8]) * 10);
+                        if (list[i + 8].Trim() != "NaN")
+                        {
+                            areaScoreArr[i] = (int)(float.Parse(list[i + 8]) * 10);
+                        }
+                        else
+                            areaScoreArr[i] = 0;
                     }
                     flag = true;
                 }
@@ -117,9 +122,15 @@ namespace Project_gui
             string str = Patient_Details.get_Data();
 
             float sum = tln_Track_Bar.Value + trn_Track_Bar.Value + bln_Track_Bar.Value;
+            if(sum != 0) { 
             str += ", " + tln_Track_Bar.Value / sum;
             str += ", " + trn_Track_Bar.Value / sum;
             str += ", " + bln_Track_Bar.Value / sum;
+            }
+            else
+            {
+                str += ", 0, 0, 0";
+            }
 
             return str;
         }
@@ -127,16 +138,16 @@ namespace Project_gui
         // Approve Game Settings
         private void click_approve_button(object sender, EventArgs e)
         {
-                //Write the Patient Details to PatientDetails.csv 
+            //Write the Patient Details to PatientDetails.csv 
 
-                write_To_Csv_File(this.addAreaSocreDataToCSV(), Patient_Detailes_File_Name);
+            write_To_Csv_File(this.addAreaSocreDataToCSV(), Patient_Detailes_File_Name);
 
-                //Close the open forms.
-                this.close_all_WinForm();
+            //Close the open forms.
+            this.close_all_WinForm();
 
-                //Game_Settings1 GUI don't close with close_all_WinForm() so I close it.
-                Game_Settings1.get_Instance().Close();
-            
+            //Game_Settings1 GUI don't close with close_all_WinForm() so I close it.
+            Game_Settings1.get_Instance().Close();
+
         }
 
         void close_all_WinForm()
@@ -188,27 +199,27 @@ namespace Project_gui
         private void write_To_Csv_File(string data_to_write, string fileName)
         {
             string fileToWrite = Path.Combine(Globals.path, fileName);
-           
-                try
+
+            try
+            {
+                //Pass the file path and filename to the StreamWriter Constructor
+                using (StreamWriter writetext = new StreamWriter(fileToWrite))
                 {
-                    //Pass the file path and filename to the StreamWriter Constructor
-                    using (StreamWriter writetext = new StreamWriter(fileToWrite))
-                    {
-                        //Write a line of text
-                        writetext.WriteLine(data_to_write);
-                        //Close the file
-                        writetext.Close();
-                    }
+                    //Write a line of text
+                    writetext.WriteLine(data_to_write);
+                    //Close the file
+                    writetext.Close();
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Exception: " + e.Message);
-                }
-                finally
-                {
-                    Console.WriteLine("Executing finally block.");
-                }
-            
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
+            finally
+            {
+                Console.WriteLine("Executing finally block.");
+            }
+
         }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)

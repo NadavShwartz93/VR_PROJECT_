@@ -59,7 +59,8 @@ namespace Project_gui
         {
             Patient_data = "";
             Patient_data += "Hand in Therapy, Id, First Name, Last Name, Height (cm), Arm Length, ";
-            Patient_data += "Standing, Treatment Time (sec), Area Score 0, Area Score 1, Area Score 2\n";
+            Patient_data += "Standing, Treatment Time (sec), Area Score 0, Area Score 1, Area Score 2, " +
+                "Area Score 3, Area Score 4, Area Score 5, Area Score 6, Area Score 7, \n";
             Patient_data += Hand_CheckBox.Text + ", " + id_textBox.Text + ", " + First_Name_textBox.Text + ", ";
             Patient_data += Last_Name_textBox.Text + ", " + Height_textBox.Text + ", ";
             Patient_data += Arm_Length_textBox.Text + ", " + Standing_CheckBox.Text + ", ";

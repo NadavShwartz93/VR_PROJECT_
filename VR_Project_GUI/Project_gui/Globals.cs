@@ -18,7 +18,7 @@ namespace Project_gui
         /// <summary>
         /// The number of clusters.
         /// </summary>
-        public const int num_of_classes = 3;
+        public const int numOfArea = 8;
 
     }
 }

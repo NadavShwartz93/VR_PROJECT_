@@ -14,7 +14,7 @@ namespace Project_gui
         public Game_Settings2()
         {
             InitializeComponent();
-            areaScoreArr = new int[Globals.num_of_classes];
+            areaScoreArr = new int[Globals.numOfArea];
             if (this.isIdExistInFile())
             {
                 tln_Label.Text = areaScoreArr[0].ToString();
@@ -25,6 +25,21 @@ namespace Project_gui
 
                 bln_Label.Text = areaScoreArr[2].ToString();
                 bln_Track_Bar.Value = areaScoreArr[2];
+
+                brn_Label.Text = areaScoreArr[3].ToString();
+                brn_Track_Bar.Value = areaScoreArr[3];
+
+                tlf_Label.Text = areaScoreArr[4].ToString();
+                tlf_Track_Bar.Value = areaScoreArr[4];
+
+                trf_Label.Text = areaScoreArr[5].ToString();
+                trf_Track_Bar.Value = areaScoreArr[5];
+
+                blf_Label.Text = areaScoreArr[6].ToString();
+                blf_Track_Bar.Value = areaScoreArr[6];
+
+                brf_Label.Text = areaScoreArr[7].ToString();
+                brf_Track_Bar.Value = areaScoreArr[7];
             }
 
             default_Radio_Button.Checked = true;
@@ -78,7 +93,7 @@ namespace Project_gui
                 //Read the area score values.
                 if (guiId == IdFromFile)
                 {
-                    for (int i = 0; i < Globals.num_of_classes; i++)
+                    for (int i = 0; i < Globals.numOfArea; i++)
                     {
                         if (list[i + 8].Trim() != "NaN")
                         {
@@ -121,15 +136,21 @@ namespace Project_gui
         {
             string str = Patient_Details.get_Data();
 
-            float sum = tln_Track_Bar.Value + trn_Track_Bar.Value + bln_Track_Bar.Value;
+            float sum = tln_Track_Bar.Value + trn_Track_Bar.Value + bln_Track_Bar.Value +
+                brn_Track_Bar.Value + tlf_Track_Bar.Value + trf_Track_Bar.Value + blf_Track_Bar.Value + brf_Track_Bar.Value;
             if(sum != 0) { 
             str += ", " + tln_Track_Bar.Value / sum;
             str += ", " + trn_Track_Bar.Value / sum;
             str += ", " + bln_Track_Bar.Value / sum;
+            str += ", " + brn_Track_Bar.Value / sum;
+            str += ", " + tlf_Track_Bar.Value / sum;
+            str += ", " + trf_Track_Bar.Value / sum;
+            str += ", " + blf_Track_Bar.Value / sum;
+            str += ", " + brf_Track_Bar.Value / sum;
             }
             else
             {
-                str += ", 0, 0, 0";
+                str += ", 0, 0, 0, 0, 0, 0, 0, 0, ";
             }
 
             return str;
@@ -196,6 +217,7 @@ namespace Project_gui
             }
 
         }
+
         private void write_To_Csv_File(string data_to_write, string fileName)
         {
             string fileToWrite = Path.Combine(Globals.path, fileName);

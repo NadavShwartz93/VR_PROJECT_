@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// This class field will hold the number of the class that the next bubble will show in.
     /// </summary>    
-    public int classNumber = 0;
+    public int areaNumber = 0;
 
     #endregion
 
@@ -212,28 +212,57 @@ public class GameManager : MonoBehaviour
     {
         // TODO: Change this function will cause the change of the bubble position.
 
+        int xMax = (int)Math.Floor((leftBoundry + rightBoundry) / 2.0);
+        int yMax = (int)Math.Floor((downBoundry + upBoundry) / 2.0);
+        int zMax = (int)Math.Floor((backBoundry + forwardBoundry) / 2.0);
+
         // class number 0 : the bubble x,y,z position will randomly set in all the game area.
-        if (this.classNumber == 0)
+        switch (this.areaNumber)
         {
-            this.xPosition = UnityEngine.Random.Range(leftBoundry, rightBoundry);
-            this.yPosition = UnityEngine.Random.Range(downBoundry, upBoundry);
-            this.zPosition = UnityEngine.Random.Range(backBoundry, forwardBoundry);
-        }
-        // class number 1 : the bubble x,y,z position will randomly set in the left game area.
-        else if (this.classNumber == 1)
-        {
-            int xMax = (int)Math.Floor((leftBoundry + rightBoundry) / 2.0);
-            this.xPosition = UnityEngine.Random.Range(leftBoundry, xMax);
-            this.yPosition = UnityEngine.Random.Range(downBoundry, upBoundry);
-            this.zPosition = UnityEngine.Random.Range(backBoundry, forwardBoundry);
-        }
-        // class number 2 : the bubble x,y,z position will randomly set in the right game area.
-        else if (this.classNumber == 2)
-        {
-            int xMin = (int)Math.Floor((leftBoundry + rightBoundry) / 2.0);
-            this.xPosition = UnityEngine.Random.Range(xMin, rightBoundry);
-            this.yPosition = UnityEngine.Random.Range(downBoundry, upBoundry);
-            this.zPosition = UnityEngine.Random.Range(backBoundry, forwardBoundry);
+            //Left
+            case 0:
+                this.xPosition = UnityEngine.Random.Range(leftBoundry, xMax);
+                this.yPosition = UnityEngine.Random.Range(downBoundry, yMax);
+                this.zPosition = UnityEngine.Random.Range(backBoundry, zMax);
+                break;
+            case 1:
+                this.xPosition = UnityEngine.Random.Range(leftBoundry, xMax);
+                this.yPosition = UnityEngine.Random.Range(downBoundry, yMax);
+                this.zPosition = UnityEngine.Random.Range(zMax, forwardBoundry);
+                break;
+            case 2:
+                this.xPosition = UnityEngine.Random.Range(leftBoundry, xMax);
+                this.yPosition = UnityEngine.Random.Range(yMax, upBoundry);
+                this.zPosition = UnityEngine.Random.Range(backBoundry, zMax);
+                break;
+            case 3:
+                this.xPosition = UnityEngine.Random.Range(leftBoundry, xMax);
+                this.yPosition = UnityEngine.Random.Range(yMax, upBoundry);
+                this.zPosition = UnityEngine.Random.Range(zMax, forwardBoundry);
+                break;
+            //Right
+            case 4:
+                this.xPosition = UnityEngine.Random.Range(xMax, rightBoundry);
+                this.yPosition = UnityEngine.Random.Range(downBoundry, yMax);
+                this.zPosition = UnityEngine.Random.Range(backBoundry, zMax);
+                break;
+            case 5:
+                this.xPosition = UnityEngine.Random.Range(xMax, rightBoundry);
+                this.yPosition = UnityEngine.Random.Range(downBoundry, yMax);
+                this.zPosition = UnityEngine.Random.Range(zMax, forwardBoundry);
+                break;
+            case 6:
+                this.xPosition = UnityEngine.Random.Range(xMax, rightBoundry);
+                this.yPosition = UnityEngine.Random.Range(yMax, upBoundry);
+                this.zPosition = UnityEngine.Random.Range(backBoundry, zMax);
+                break;
+            case 7:
+                this.xPosition = UnityEngine.Random.Range(xMax, rightBoundry);
+                this.yPosition = UnityEngine.Random.Range(yMax, upBoundry);
+                this.zPosition = UnityEngine.Random.Range(zMax, forwardBoundry);
+                break;
+            default:
+                break;
         }
     }
 

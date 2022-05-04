@@ -151,7 +151,8 @@ public class CSVReader : MonoBehaviour
     {
         string Patient_data = "";
         Patient_data += "Hand in Therapy, Id, First Name, Last Name, Height (cm), Arm Length, ";
-        Patient_data += "Standing, Treatment Time (sec), Area Score 0, Area Score 1, Area Score 2\n";
+        Patient_data += "Standing, Treatment Time (sec), Area Score 0, Area Score 1, Area Score 2, Area Score 3, Area Score 4, " +
+            "Area Score 5, Area Score 6, Area Score 7, \n";
 
         try
         {
@@ -164,7 +165,7 @@ public class CSVReader : MonoBehaviour
                 }
 
                 float sumOfArray = Globals.numOfApperancce.Sum();
-                for (int i = 0; i < Globals.num_of_classes; i++)
+                for (int i = 0; i < Globals.numOfAreas; i++)
                 {
                     var temp = Globals.numOfApperancce[i] / (sumOfArray);
                     Patient_data += temp;

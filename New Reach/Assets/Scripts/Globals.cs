@@ -68,11 +68,14 @@ public class Globals
     /// This is the number of columns that the bubble_in_space is located.
     /// </summary>
     public const int bubble_in_space_column_number = 6;
-
     /// <summary>
     /// 
     /// </summary>
-    public static int[] numOfApperancce = new int[num_of_classes];
+    public const int numOfAreas = 8;
+    /// <summary>
+    /// 
+    /// </summary>
+    public static int[] numOfApperancce = new int[numOfAreas];
 
     ////// The area that the bubbles can show up//////////
     public const string FBCInSpace = "Front-Bottom-Center";

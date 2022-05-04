@@ -35,24 +35,34 @@ class BubblePosition
 
     public void calculateBubblePosition(int[] predictedClass)
     {
-        if (firstPredicte)
-            weights = getPredictedArray(predictedClass.Length);
-        else
-        {
-            var v = getPredictedArray(predictedClass.Length);
+        int predClass = predictedClass[0];
 
-            // Insert the result into weights array.
-            multiplyVectors(v, weights);
+        if (predClass == 0)
+            weights = getPredictedArray(Globals.numOfAreas);
+        else if (predClass == 1) { 
+            weights = getPredictedArray(Globals.numOfAreas/2);
+            double[] tempArr = new double[Globals.numOfAreas / 2];
+            weights.Concat(tempArr);
+        }
+        else if (predClass == 2)
+        {
+            var tempWeights= getPredictedArray(Globals.numOfAreas / 2);
+            double[] tempArr = new double[Globals.numOfAreas / 2];
+            tempArr.Concat(tempWeights);
+            weights = tempArr;
         }
 
         // Update the GameManager classNumber field about the selected class for the next bubble. 
-        GameManager.instance.classNumber = calcPosition(predictedClass);
+        GameManager.instance.areaNumber = calcPosition();
+
+        //Increment the array in the 0 place by one in order to find the probability (weights).
+        Globals.numOfApperancce[GameManager.instance.areaNumber]++;
     }
 
-    private int calcPosition(int[] predictedClass)
+    private int calcPosition()
     {
         //Section 1
-        List<Items<int>> initial = itemsToList(predictedClass);
+        List<Items<int>> initial = itemsToList();
 
         //Section 2
         var converted = new List<Items<int>>(initial.Count);
@@ -71,29 +81,34 @@ class BubblePosition
 
 
         //Section 3
-        var probability = random.NextDouble();
+        var probability = UnityEngine.Random.Range(0, (float)1.01);
         var selected = converted.FirstOrDefault(i => i.Probability >= probability);
-        Debug.Log("Selected class = " + selected.Item);
+        Debug.Log("Selected area = " + selected.Item);
 
         
         return selected.Item;
     }
 
-    private List<Items<int>> itemsToList(int[] predictedClass)
+    private List<Items<int>> itemsToList()
     {
         List<Items<int>> initial = new List<Items<int>>();
-        for (int i = 0; i < weights.Length; i++)
+        for (int i = 0; i < Globals.numOfAreas; i++)
         {
             initial.Add(new Items<int>
             {
                 Probability = weights[i],
-                Item = predictedClass[i]
+                Item = i
             });
         }
 
         return initial;
     }
 
+    /// <summary>
+    /// Return probability between 0 to 1. Inside array.
+    /// </summary>
+    /// <param name="size"></param>
+    /// <returns></returns>
     private double[] getPredictedArray(int size)
     {
         double min = 0;

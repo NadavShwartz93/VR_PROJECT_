@@ -146,15 +146,12 @@ class KNN
         Write_To_Csv_File(Globals.KnnOutputFilePath, predictedClass);
         ///////////////////////////////////////////////////
 
-        //Increment the array in the 0 place by one in order to find the probability (weights).
-        Globals.numOfApperancce[predictedClass[0]] += 1;
-
-        for (int i = 0; i < Globals.num_of_classes; i++)
+        for (int i = 0; i < Globals.numOfAreas; i++)
         {
             Debug.Log(i + ". is equal:  " + Globals.numOfApperancce[i]);
         }
-        
-        
+
+        Debug.Log("Selected class = " + predictedClass[0]);
 
         BubblePosition.getInstance().calculateBubblePosition(predictedClass);
 

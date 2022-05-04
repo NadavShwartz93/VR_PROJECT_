@@ -56,7 +56,7 @@ class BubblePosition
         GameManager.instance.areaNumber = calcPosition();
 
         //Increment the array in the 0 place by one in order to find the probability (weights).
-        Globals.numOfApperancce[GameManager.instance.areaNumber]++;
+        Globals.numOfApperance[GameManager.instance.areaNumber]++;
     }
 
     private int calcPosition()

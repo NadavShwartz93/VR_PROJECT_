@@ -28,6 +28,11 @@ public class EndGame : MonoBehaviour
         //update the PatientDetails.csv file
         CSVReader.writeToPatientDetails();
 
+        CSVReader.writeToAreaRecommendationOfUser();
+
+        Debug.Log("Write to AreaRecommendationOfUser.csv");
+
+
         #endregion
 
         Debug.Log("EndGame.cs finished!!!");

@@ -34,6 +34,9 @@ public class Globals
     public static readonly string PatientDetailsFilePath =
         Path.Combine(Application.persistentDataPath, "PatientDetails.csv");
 
+    public static readonly string AreaRecommendationOfUser =
+        Path.Combine(Application.persistentDataPath, "AreaRecommendationOfUser.csv");
+
     /// <summary>
     /// This flag check if this is the first game round.
     /// </summary>
@@ -69,13 +72,31 @@ public class Globals
     /// </summary>
     public const int bubble_in_space_column_number = 6;
     /// <summary>
-    /// 
+    /// This variable represent the 8 different area in the game. 
     /// </summary>
     public const int numOfAreas = 8;
     /// <summary>
     /// 
     /// </summary>
-    public static int[] numOfApperancce = new int[numOfAreas];
+    public static int[] numOfApperance = new int[numOfAreas];
+    /// <summary>
+    /// This variable represent the number of actual history row in 
+    /// 'AreaRecommendationOfUser.csv' file.
+    /// </summary>
+    public static int numOfActualHistoryRow = 0;
+    /// <summary>
+    /// This variable represent the number of maximum history row in 
+    /// 'AreaRecommendationOfUser.csv' file.
+    /// </summary>
+    public const int historyRow = 3;
+    /// <summary>
+    /// This matrix save the recommendation from 'AreaRecommendationOfUser.csv' file.
+    /// </summary>
+    public static float[,] matrixOfRecommendation = new float[historyRow + 1, numOfAreas];
+    /// <summary>
+    /// This variable check if predicted has made.
+    /// </summary>
+    public static bool isPredicted = false;
 
     ////// The area that the bubbles can show up//////////
     public const string FBCInSpace = "Front-Bottom-Center";
@@ -114,10 +135,6 @@ public class Globals
         return BubbleInSpace;
     }
 
-    public static float getBubbleNumber(string bubbleName)
-    {
-        return Initialize_BubbleInSpace_dictionary()[bubbleName];
-    }
 
     //
     #region Conversion Methods
@@ -205,34 +222,38 @@ public class Globals
                 .ToArray();
     }
 
-    public static T[] GetRow<T>(T[][] matrix, int rowNumber)
+    public static T[] GetCol<T>(T[,] matrix, int colNumber)
     {
-        int count = matrix[0].Length;
-        return Enumerable.Range(0, count)
-                .Select(x => matrix[rowNumber][x])
+        return Enumerable.Range(0, matrix.GetLength(0))
+                .Select(x => matrix[x, colNumber])
                 .ToArray();
     }
 
-    /// <summary>
-    /// This method return a specific range of elements that start in start index.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="array"></param>
-    /// <param name="rowNumber"></param>
-    /// <param name="count"></param>
-    /// <returns></returns>
-    public static T[] GetRangeFromArr<T>(T[] array, int start, int count)
+    public static string concatAreaScore()
     {
-        return Enumerable.Range(start, count)
-                .Select(x => array[x])
-                .ToArray();
+        string str = "";
+        float sumOfArray = numOfApperance.Sum();
+        for (int i = 0; i < numOfAreas; i++)
+        {
+            var temp = numOfApperance[i] / (sumOfArray);
+
+            //update the matrix.
+            matrixOfRecommendation[numOfActualHistoryRow, i] = temp;
+
+            str += temp;
+            str += ",";
+        }
+
+        return str;
     }
 
-    public static T[] GetCol<T>(T[][] matrix, int colNumber)
+    public static void caclcAvg()
     {
-        int count = matrix.Length;
-        return Enumerable.Range(0, count)
-                .Select(x => matrix[x][colNumber])
-                .ToArray();
+        for (int i = 0; i < numOfAreas; i++)
+        {
+            matrixOfRecommendation[historyRow, i] =
+                GetCol(matrixOfRecommendation, i).Average();
+        }
     }
+
 }

@@ -148,7 +148,7 @@ class KNN
 
         for (int i = 0; i < Globals.numOfAreas; i++)
         {
-            Debug.Log(i + ". is equal:  " + Globals.numOfApperancce[i]);
+            Debug.Log(i + ". is equal:  " + Globals.numOfApperance[i]);
         }
 
         Debug.Log("Selected class = " + predictedClass[0]);

@@ -284,8 +284,10 @@ public class GameManager : MonoBehaviour
         string lastBubbleState;
         lastBubbleState = xPosition.ToString() + "^" + yPosition.ToString() + "^" + zPosition.ToString();
 
-
-        KNN.Get_instance().start();
+        if (Globals.numOfActualHistoryRow < Globals.historyRow)
+            KNN.Get_instance().start();
+        else
+            ;
 
         // TODO: This method set the x,y,z position of the next bubble.
         ChangeBubblePosition();

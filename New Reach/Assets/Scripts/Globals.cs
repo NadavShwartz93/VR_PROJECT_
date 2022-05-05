@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using System.IO;
 
 /// <summary>
 /// This class was written by Nadav Shwarz and Gal Sherman.
-/// This class saves all the global variables and methods.
-/// The classes that we created use these variables.
+/// This class saves all the global (constant) variables and static methods.
+/// The other classes that we created are use the variables from this class.
 /// </summary>
 public class Globals
 {
@@ -114,7 +112,7 @@ public class Globals
 
     private static Dictionary<string, float> BubbleInSpace = new Dictionary<string, float>();
 
-    public static Dictionary<string, float> Initialize_BubbleInSpace_dictionary()
+    public static Dictionary<string, float> InitializeBubbleInSpaceDictionary()
     {
         if (BubbleInSpace.Count != 0)
             return BubbleInSpace;
@@ -201,7 +199,7 @@ public class Globals
         return (float)Math.Sqrt(counter);
     }
 
-    public static double Euclidean_distance(double[] v1, double[] v2, int vector_size)
+    public static double EuclideanDistance(double[] v1, double[] v2, int vector_size)
     {
         double counter = 0;
         const double power = 2;
@@ -246,14 +244,4 @@ public class Globals
 
         return str;
     }
-
-    public static void caclcAvg()
-    {
-        for (int i = 0; i < numOfAreas; i++)
-        {
-            matrixOfRecommendation[historyRow, i] =
-                GetCol(matrixOfRecommendation, i).Average();
-        }
-    }
-
 }

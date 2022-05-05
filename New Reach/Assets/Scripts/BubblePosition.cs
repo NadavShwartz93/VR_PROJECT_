@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
 /// This class was written by Nadav Shwarz and Gal Sherman.
 /// This class set the next bubble location, based on the user's results.
+/// In edition, this class calculate the weight of the Areas.
 /// </summary>
 class BubblePosition
 {
@@ -25,7 +24,7 @@ class BubblePosition
         random = new System.Random();
     }
 
-    public static BubblePosition getInstance()
+    public static BubblePosition GetInstance()
     {
         if (instance == null)
             instance = new BubblePosition();
@@ -33,36 +32,36 @@ class BubblePosition
         return instance;
     }
 
-    public void calculateBubblePosition(int[] predictedClass)
+    public void CalculateBubblePosition(int[] predictedClass)
     {
         int predClass = predictedClass[0];
 
         if (predClass == 0)
-            weights = getPredictedArray(Globals.numOfAreas);
+            weights = GetPredictedArray(Globals.numOfAreas);
         else if (predClass == 1) { 
-            weights = getPredictedArray(Globals.numOfAreas/2);
+            weights = GetPredictedArray(Globals.numOfAreas/2);
             double[] tempArr = new double[Globals.numOfAreas / 2];
             weights.Concat(tempArr);
         }
         else if (predClass == 2)
         {
-            var tempWeights= getPredictedArray(Globals.numOfAreas / 2);
+            var tempWeights= GetPredictedArray(Globals.numOfAreas / 2);
             double[] tempArr = new double[Globals.numOfAreas / 2];
             tempArr.Concat(tempWeights);
             weights = tempArr;
         }
 
         // Update the GameManager classNumber field about the selected class for the next bubble. 
-        GameManager.instance.areaNumber = calcPosition();
+        GameManager.instance.areaNumber = CalcPosition();
 
         //Increment the array in the 0 place by one in order to find the probability (weights).
         Globals.numOfApperance[GameManager.instance.areaNumber]++;
     }
 
-    private int calcPosition()
+    private int CalcPosition()
     {
         //Section 1
-        List<Items<int>> initial = itemsToList();
+        List<Items<int>> initial = ItemsToList();
 
         //Section 2
         var converted = new List<Items<int>>(initial.Count);
@@ -89,7 +88,7 @@ class BubblePosition
         return selected.Item;
     }
 
-    private List<Items<int>> itemsToList()
+    private List<Items<int>> ItemsToList()
     {
         List<Items<int>> initial = new List<Items<int>>();
         for (int i = 0; i < Globals.numOfAreas; i++)
@@ -109,7 +108,7 @@ class BubblePosition
     /// </summary>
     /// <param name="size"></param>
     /// <returns></returns>
-    private double[] getPredictedArray(int size)
+    private double[] GetPredictedArray(int size)
     {
         double min = 0;
         double max = 1;
@@ -143,7 +142,7 @@ class BubblePosition
     /// </summary>
     /// <param name="v1"></param>
     /// <param name="v2"></param>
-    private void multiplyVectors(double[] v1, double[] v2)
+    private void MultiplyVectors(double[] v1, double[] v2)
     {
         for (int i = 0; i < weights.Length; i++)
         {

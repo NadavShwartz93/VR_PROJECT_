@@ -29,7 +29,7 @@ class KNN
         //////////////////////////////////////////
 
         //Read the CentralVectorsKmeans.csv file into double array.
-        this.CentralVectorskmeans = readCentralVector(Globals.CentralVectorsKmeansFilePath,
+        this.CentralVectorskmeans = ReadCentralVector(Globals.CentralVectorsKmeansFilePath,
             Globals.num_of_classes);
 
         //Read the KmeansClusters.txt file into Dictionary.
@@ -39,7 +39,7 @@ class KNN
         this.dataset = File.ReadAllLines(Globals.datasetFilePath);
     }
 
-    public static KNN Get_instance()
+    public static KNN GetInstance()
     {
         if (instance == null)
         {
@@ -48,7 +48,7 @@ class KNN
         return instance;
     }
 
-    private void getParametersColumnsFromData()
+    private void GetParametersColumnsFromData()
     {
         useVectorKmeans = new double[Globals.numOfParameters];
 
@@ -60,7 +60,7 @@ class KNN
         }
     }
 
-    private void Write_To_Csv_File(string path, int[] simUsers)
+    private void WriteToCsvFile(string path, int[] simUsers)
     {
         try
         {
@@ -77,7 +77,7 @@ class KNN
         }
     }
 
-    private double[][] readCentralVector(string fileName, int numOfClasses)
+    private double[][] ReadCentralVector(string fileName, int numOfClasses)
     {
         double[][] dataFromText = new double[numOfClasses][];
 
@@ -128,7 +128,7 @@ class KNN
         return values;
     }
 
-    public void start()
+    public void Start()
     {
         //General constants.
         const int numClasses = Globals.num_of_classes; //In this case the classes are 0 || 1 || 2 ...
@@ -136,14 +136,14 @@ class KNN
         int k = Globals.K;
 
         //Initialize the useVectorKmeans array.
-        this.getParametersColumnsFromData();
+        this.GetParametersColumnsFromData();
 
         //Find the most similar vectors in the predictedClass
         //and write the data to knnOutput.csv
         int[] predictedClass = Classify(useVectorKmeans, CentralVectorskmeans,
             numClasses, numOfColums); //The predicted class
 
-        Write_To_Csv_File(Globals.KnnOutputFilePath, predictedClass);
+        WriteToCsvFile(Globals.KnnOutputFilePath, predictedClass);
         ///////////////////////////////////////////////////
 
         for (int i = 0; i < Globals.numOfAreas; i++)
@@ -153,7 +153,7 @@ class KNN
 
         Debug.Log("Selected class = " + predictedClass[0]);
 
-        BubblePosition.getInstance().calculateBubblePosition(predictedClass);
+        BubblePosition.GetInstance().CalculateBubblePosition(predictedClass);
 
         Debug.Log("KNN.cs finished!!!");
     }
@@ -176,10 +176,10 @@ class KNN
         // will be in the fisrt index 
         Array.Sort(info);
 
-        return getClasses(info);
+        return GetClasses(info);
     }
 
-    private int[] getClasses(IndexAndDistance[] info)
+    private int[] GetClasses(IndexAndDistance[] info)
     {
         int[] result = new int[info.Length];
         for (int i = 0; i < info.Length; i++)
@@ -199,7 +199,7 @@ class KNN
     /// <returns></returns>
     private double Distance(double[] unknown, double[] data)
     {
-        return Globals.Euclidean_distance(unknown, data, unknown.Length);
+        return Globals.EuclideanDistance(unknown, data, unknown.Length);
     }
 
     /// <summary>

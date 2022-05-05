@@ -23,15 +23,15 @@ public class EndGame : MonoBehaviour
         //Run the Kmeans.cs script in order to make a new classification 
         //of the dataset.
         Debug.Log("Run the Kmeans.cs in order to generate: KmeansClusters.txt and update CentralVectorsKmeans.");
-        Kmeans.Get_instance().Train(Globals.numOfTrainingIteration);
+        Kmeans.GetInstance().Train(Globals.numOfTrainingIteration);
 
-        //update the PatientDetails.csv file
+        //update the 'PatientDetails.csv' file.
         CSVReader.writeToPatientDetails();
+        Debug.Log("Write PatientDetails.csv .");
 
-        CSVReader.writeToAreaRecommendationOfUser();
-
+        //update the 'AreaRecommendationOfUser.csv' file.
+        MakePrediction.GetInstance().WriteToAreaRecommendationOfUser();
         Debug.Log("Write to AreaRecommendationOfUser.csv");
-
 
         #endregion
 

@@ -285,7 +285,7 @@ public class GameManager : MonoBehaviour
         lastBubbleState = xPosition.ToString() + "^" + yPosition.ToString() + "^" + zPosition.ToString();
 
         if (Globals.numOfActualHistoryRow < Globals.historyRow)
-            KNN.Get_instance().start();
+            KNN.GetInstance().Start();
         else
             ;
 

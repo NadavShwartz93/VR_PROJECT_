@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using UnityEngine;
 
 /// <summary>
 /// This class was written by Nadav Shwarz and Gal Sherman.
@@ -29,16 +26,16 @@ class Kmeans
         instance = this;
 
         //Initialize the BubbleInSpace dictionary.
-        this.Initialize_BubbleInSpace_dictionary();
+        this.InitializeBubbleInSpaceDictionary();
 
         //Initialize the central vectors!
-        this.Initialize_central_vectors();
+        this.InitializeCentralVectors();
 
         //Initialize the classification Dictionary.
-        this.Initialize_classification_dictionary();
+        this.InitializeClassificationDictionary();
 
         //Read all the data from Dataset.csv and save to data_mat 2D array.
-        this.Read_file_to_array();
+        this.ReadFileToArray();
     }
 
 
@@ -47,7 +44,7 @@ class Kmeans
     /// this method return instance of Kmeans class.
     /// </summary>
     /// <returns></returns>
-    public static Kmeans Get_instance()
+    public static Kmeans GetInstance()
     {
         if (instance == null)
         {
@@ -60,13 +57,13 @@ class Kmeans
     /// This method read the Dataset.csv file, 
     /// and save the data inside data_mat of 2D float array.
     /// </summary>
-    private void Read_file_to_array()
+    private void ReadFileToArray()
     {
         List<string[]> list = ReadLines(Globals.datasetFilePath);
 
         data_mat = new float[list.Count, numberOfColumns];
 
-        parametersColumnsFromData(list, data_mat);
+        ParametersColumnsFromData(list, data_mat);
     }
 
     private List<string[]> ReadLines(string fileName)
@@ -99,7 +96,7 @@ class Kmeans
     /// </summary>
     /// <param name="list"></param>
     /// <param name="mtx"></param>
-    private void parametersColumnsFromData(List<string[]> list, float[,] mtx)
+    private void ParametersColumnsFromData(List<string[]> list, float[,] mtx)
     {
         int i = 0;
         int start = Globals.firstParameterColumnNumber;
@@ -121,7 +118,7 @@ class Kmeans
     /// <param name="central_vectors_row_num"></param>
     /// <param name="vector_size"></param>
     /// <returns>The euclidean distance of the two vectors.</returns>
-    private float Euclidean_distance(int row_num1, int central_vectors_row_num, int vector_size)
+    private float EuclideanDistance(int row_num1, int central_vectors_row_num, int vector_size)
     {
         return Globals.Euclidean_distance(GetRow(data_mat, row_num1),
             GetRow(central_vectors, central_vectors_row_num), vector_size);
@@ -131,16 +128,16 @@ class Kmeans
     /// <summary>
     /// This method initialize the BubbleInSpace dictionary.
     /// </summary>
-    private void Initialize_BubbleInSpace_dictionary()
+    private void InitializeBubbleInSpaceDictionary()
     {
-        BubbleInSpace = Globals.Initialize_BubbleInSpace_dictionary();
+        BubbleInSpace = Globals.InitializeBubbleInSpaceDictionary();
     }
 
 
     /// <summary>
     /// This method initialize the Classification dictionary.
     /// </summary>
-    private void Initialize_classification_dictionary()
+    private void InitializeClassificationDictionary()
     {
         for (int i = 0; i < num_of_classes; i++)
         {
@@ -152,7 +149,7 @@ class Kmeans
     /// <summary>
     /// This method initialize the central vectors that K-means need to operate.
     /// </summary>
-    private void Initialize_central_vectors()
+    private void InitializeCentralVectors()
     {
         //Local variables.
         const int row_size = num_of_classes;
@@ -178,7 +175,7 @@ class Kmeans
     /// </summary>
     /// <param name="Key_to_stay"></param>
     /// <param name="vector_num"></param>
-    private void Remove_item(int Key_to_stay, int vector_num)
+    private void RemoveItem(int Key_to_stay, int vector_num)
     {
         for (int i = 0; i < num_of_classes; i++)
         {
@@ -190,7 +187,7 @@ class Kmeans
     /// <summary>
     /// This method represent the assignment step in the Kmeans algorithm.
     /// </summary>
-    private void Assignment_step()
+    private void AssignmentStep()
     {
         int row_size = data_mat.GetLength(0);
         int col_size = data_mat.GetLength(1);
@@ -199,12 +196,12 @@ class Kmeans
         for (int vector_num = 0; vector_num < row_size; vector_num++)
         {
             center_vec_index = 0;
-            float minimum_value = Euclidean_distance(vector_num, center_vec_index, col_size);
+            float minimum_value = EuclideanDistance(vector_num, center_vec_index, col_size);
 
             //Find the closest central vector to the vector_num.
             for (int j = 1; j < central_vectors.GetLength(0); j++)
             {
-                float temp = Euclidean_distance(vector_num, j, col_size);
+                float temp = EuclideanDistance(vector_num, j, col_size);
                 if (temp < minimum_value)
                 {
                     minimum_value = temp;
@@ -215,7 +212,7 @@ class Kmeans
             //Update the classification Dictionary.
             if (!classification[center_vec_index].Contains(vector_num))
             {
-                Remove_item(center_vec_index, vector_num);
+                RemoveItem(center_vec_index, vector_num);
                 classification[center_vec_index].Add(vector_num);
             }
         }
@@ -223,7 +220,7 @@ class Kmeans
     }
 
 
-    private void Update_central_vectors(int key_number)
+    private void UpdateCentralVectors(int key_number)
     {
         int col_size = central_vectors.GetLength(1);
         for (int i = 0; i < col_size; i++)
@@ -249,11 +246,11 @@ class Kmeans
     /// <summary>
     /// This method represent the update step in the Kmeans algorithm.
     /// </summary>
-    private void Update_step()
+    private void UpdateStep()
     {
         for (int i = 0; i < num_of_classes; i++)
         {
-            Update_central_vectors(i);
+            UpdateCentralVectors(i);
 
         }
     }
@@ -262,15 +259,15 @@ class Kmeans
     {
         for (int i = 0; i < numOfIteration; i++)
         {
-            Assignment_step();
-            Update_step();
+            AssignmentStep();
+            UpdateStep();
         }
-        Write_To_Csv_File();
+        WriteToCsvFile();
         DictionaryToJson();
 
     }
 
-    private void Write_To_Csv_File()
+    private void WriteToCsvFile()
     {
         string path = Globals.CentralVectorsKmeansFilePath;
         try
@@ -315,5 +312,4 @@ class Kmeans
             writeText.WriteLine(s);
         }
     }
-
 }

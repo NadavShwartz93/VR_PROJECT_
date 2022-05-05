@@ -60,6 +60,7 @@ public class CSVReader : MonoBehaviour
             #region Gal_Nadav_Code_Blocks
 
             //Read the Area Score data from "PatientDetails.csv" that the therapist gave. 
+            //and save it.
             for (int i = 0; i < Globals.numOfAreas; i++)
             {
                 guiRecommendation[i] = float.Parse(values[i + 8]);
@@ -73,45 +74,15 @@ public class CSVReader : MonoBehaviour
         }
 
         #region Gal_Nadav_Code_Blocks
-        ReadAreaRecommendationFile();
 
-        for (int i = 0; i < Globals.numOfAreas; i++)
-        {
-            Globals.matrixOfRecommendation[Globals.numOfActualHistoryRow, i] = guiRecommendation[i];
-        }
-        Globals.numOfActualHistoryRow++;
+        MakePrediction.GetInstance().ReadAreaRecommendationFile();
 
-        if (Globals.numOfActualHistoryRow == Globals.historyRow)
-        {
-            Globals.caclcAvg();
-            Globals.isPredicted = true;
-        }
+        MakePrediction.GetInstance().AppendGuiRecommendationToMatrix(guiRecommendation);
 
+        MakePrediction.GetInstance().CheckPrediction();
 
         #endregion
 
-    }
-
-    private void ReadAreaRecommendationFile()
-    {
-        using (var reader = new StreamReader(Globals.AreaRecommendationOfUser))
-        {
-            //Don't need the first line.
-            var line = reader.ReadLine();
-            int row = 0;
-            while (!reader.EndOfStream)
-            {
-                //Update the size of the variable.
-                Globals.numOfActualHistoryRow++;
-
-                var values = reader.ReadLine().Split(',');
-                for (int col = 0; col < Globals.numOfAreas; col++)
-                {
-                    Globals.matrixOfRecommendation[row, col] = float.Parse(values[col]);
-                }
-                row++;
-            }
-        }
     }
 
     //Transfer the data to the ButtonListener class to initiate the game's patient details
@@ -168,7 +139,7 @@ public class CSVReader : MonoBehaviour
                 bubble.bubblePosition.y, bubble.bubblePosition.z, bubbleLocation);
 
             //Initialize the simulateUseVector from Globals class.
-            Globals.simulateUseVector[6] = Globals.Initialize_BubbleInSpace_dictionary()[bubbleLocation];
+            Globals.simulateUseVector[6] = Globals.InitializeBubbleInSpaceDictionary()[bubbleLocation];
             Globals.simulateUseVector[7] = (double)bubble.VavgNormal;
             Globals.simulateUseVector[8] = (double)bubble.maxVcntNormal;
             Globals.simulateUseVector[9] = (double)bubble.reachTimeNormal;
@@ -208,8 +179,6 @@ public class CSVReader : MonoBehaviour
 
                 //Write The data to the .csv file.
                 writer.WriteLine(Patient_data);
-
-                Debug.Log("Write PatientDetails.csv .");
             }
         }
         catch (Exception e)
@@ -217,35 +186,4 @@ public class CSVReader : MonoBehaviour
             Debug.Log("Exception: " + e.Message);
         }
     }
-
-    public static void writeToAreaRecommendationOfUser()
-    {
-        try
-        {
-            using (StreamWriter writer = new StreamWriter(Globals.AreaRecommendationOfUser))
-            {
-                writer.WriteLine("Area Score 0, Area Score 1, Area Score 2, Area Score 3, " +
-                    "Area Score 4, Area Score 5, Area Score 6, Area Score 7, \n");
-
-                string str = "";
-
-                for (int i = 0; i < Globals.numOfActualHistoryRow; i++)
-                {
-                    for (int j = 0; j < Globals.numOfAreas; j++)
-                    {
-                        str += Globals.matrixOfRecommendation[i, j] + ",";
-                    }
-                    str += "\n";
-                }
-
-                writer.WriteLine(str);
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Exception: " + e.Message);
-        }
-    }
-
-
 }

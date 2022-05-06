@@ -32,51 +32,64 @@ class BubblePosition
         return instance;
     }
 
-    public void CalculateBubblePosition(int[] predictedClass)
+    public void CalculateBubblePosition(int[] predictedClass = null)
     {
-        int predClass = predictedClass[0];
-
-        if (predClass == 0)
-            weights = GetPredictedArray(Globals.numOfAreas);
-        else if (predClass == 1) { 
-            weights = GetPredictedArray(Globals.numOfAreas/2);
-            double[] tempArr = new double[Globals.numOfAreas / 2];
-            weights.Concat(tempArr);
-        }
-        else if (predClass == 2)
+        int predClass = -1;
+        if (Globals.isPredicted == false)
         {
-            var tempWeights= GetPredictedArray(Globals.numOfAreas / 2);
-            double[] tempArr = new double[Globals.numOfAreas / 2];
-            tempArr.Concat(tempWeights);
-            weights = tempArr;
+            predClass = predictedClass[0];
+            if (predClass == 0)
+                weights = GetPredictedArray(Globals.numOfAreas);
+            else if (predClass == 1 || predClass == 2)
+            {
+                weights = GetPredictedArray(Globals.numOfAreas / 2);
+            }
+        }
+        else 
+        {
+            var floatArr = Globals.GetRow(Globals.matrixOfRecommendation, 0);
+            weights = Globals.floatToDouble(floatArr);
         }
 
         // Update the GameManager classNumber field about the selected class for the next bubble. 
-        GameManager.instance.areaNumber = CalcPosition();
+        if(predictedClass != null)
+            GameManager.instance.areaNumber = CalcPosition(predClass);
+        else
+            GameManager.instance.areaNumber = CalcPosition();
 
         //Increment the array in the 0 place by one in order to find the probability (weights).
         Globals.numOfApperance[GameManager.instance.areaNumber]++;
     }
 
-    private int CalcPosition()
+    private int CalcPosition(int predClass = -1)
     {
         //Section 1
-        List<Items<int>> initial = ItemsToList();
+        List<Items<int>> initial = ItemsToList(predClass);
 
         //Section 2
         var converted = new List<Items<int>>(initial.Count);
 
         var sum = 0.0;
+        double maxProbability = getMaxProbability(initial);
+        int maxItem = 0;
 
-        for (int i = 1; i < initial.Count; i++)
+        for (int i = 0; i < initial.Count; i++)
         {
-            sum += initial[i].Probability;
-            converted.Add(new Items<int> { Probability = sum, Item = initial[i].Item });
+            if (initial[i].Probability == maxProbability)
+            {
+                maxItem = i;
+            }
+            else
+            {
+                sum += initial[i].Probability;
+                converted.Add(new Items<int> { Probability = sum, 
+                    Item = initial[i].Item });
+            }
         }
 
         //The first element in the list has the biggest Probability,
         //so this element got probability of 1.
-        converted.Add(new Items<int> { Probability = 1.0, Item = initial.First().Item });
+        converted.Add(new Items<int> { Probability = 1.0, Item = maxItem });
 
 
         //Section 3
@@ -84,27 +97,87 @@ class BubblePosition
         var selected = converted.FirstOrDefault(i => i.Probability >= probability);
         Debug.Log("Selected area = " + selected.Item);
 
-        
+
         return selected.Item;
     }
 
-    private List<Items<int>> ItemsToList()
+    private double getMaxProbability(List<Items<int>> initial)
+    {
+        double max = initial.First().Probability;
+
+        foreach (var item in initial)
+        {
+            if (item.Probability > max)
+                max = item.Probability;
+        }
+
+        return max;
+    }
+
+    private List<Items<int>> ItemsToList(int predClass)
     {
         List<Items<int>> initial = new List<Items<int>>();
-        for (int i = 0; i < Globals.numOfAreas; i++)
+
+        int index = 0;
+        switch (predClass)
         {
-            initial.Add(new Items<int>
-            {
-                Probability = weights[i],
-                Item = i
-            });
+            case 1:
+                for (int i = 0; i < Globals.numOfAreas; i++)
+                {
+                    if(i > 3 && i < Globals.numOfAreas)
+                        initial.Add(new Items<int>
+                        {
+                            Probability = 0,
+                            Item = i
+                        });
+                    else
+                    {
+                        initial.Add(new Items<int>
+                        {
+                            Probability = weights[index++],
+                            Item = i
+                        });
+                    }
+                }
+                break;
+            case 2:
+                for (int i = 0; i < Globals.numOfAreas; i++)
+                {
+                    if (i >= 0 && i < Globals.numOfAreas/2)
+                        initial.Add(new Items<int>
+                        {
+                            Probability = 0,
+                            Item = i
+                        });
+                    else
+                    {
+                        initial.Add(new Items<int>
+                        {
+                            Probability = weights[index++],
+                            Item = i
+                        });
+                    }
+                }
+                break;
+            default:
+                for (int i = 0; i < Globals.numOfAreas; i++)
+                {
+                    initial.Add(new Items<int>
+                    {
+                        Probability = weights[i],
+                        Item = i
+                    });
+                }
+                break;
         }
+        
 
         return initial;
     }
 
     /// <summary>
-    /// Return probability between 0 to 1. Inside array.
+    /// Return probability between 0 to 1. 
+    /// Inside array.
     /// </summary>
     /// <param name="size"></param>
     /// <returns></returns>
@@ -115,13 +188,26 @@ class BubblePosition
         double sum = 0;
 
         double[] arr = new double[size];
+
+        //Get the first place randomly.
+
+        //var randPlace = UnityEngine.Random.Range(0, size);
+        var randPlace = random.Next(0, size);
+        arr[randPlace] = UnityEngine.Random.Range((float)min, (float)max);
+        max -= arr[randPlace];
+        sum += arr[randPlace];
+
         for (int i = 0; i < size; i++)
         {
+            if (i == randPlace)
+                continue;
+
             if (i == size - 1)
                 arr[i] = 1 - sum;
             else
             {
-                arr[i] = GetRandomNumberInRange(min, max);
+                //arr[i] = UnityEngine.Random.Range((float)min, (float)max);
+                arr[i] = UnityEngine.Random.Range((float)0, (float)1);
                 max -= arr[i];
                 sum += arr[i];
             }

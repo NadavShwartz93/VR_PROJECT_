@@ -16,7 +16,7 @@ public class EndGame : MonoBehaviour
         //Added 2 new commands
         #region Gal_Nadav_Code_Block
 
-        //Update the dataset.csv file
+        //Update the dataset.csv file.
         Debug.Log("Write to the Dataset.csv");
         Dataset.Get_instance().Write_data_to_file();
 

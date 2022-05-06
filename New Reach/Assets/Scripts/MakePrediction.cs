@@ -62,7 +62,8 @@ class MakePrediction
     {
         for (int i = 0; i < Globals.numOfAreas; i++)
         {
-            Globals.matrixOfRecommendation[Globals.numOfActualHistoryRow, i] = guiRecommendation[i];
+            Globals.matrixOfRecommendation[Globals.numOfActualHistoryRow, i] = 
+                guiRecommendation[i];
         }
         Globals.numOfActualHistoryRow++;
     }
@@ -72,13 +73,17 @@ class MakePrediction
     /// Globals.matrixOfRecommendation data structure, and save it in the
     /// last row.
     /// </summary>
-    private void CalcAvgOfRecommendationMatrix()
+    private float[] CalcAvgOfRecommendationMatrix()
     {
+        float[] arrRecommendation = new float[Globals.numOfAreas];
+
         for (int i = 0; i < Globals.numOfAreas; i++)
         {
-            Globals.matrixOfRecommendation[Globals.historyRow, i] =
+            arrRecommendation[i] =
                 Globals.GetCol(Globals.matrixOfRecommendation, i).Average();
         }
+
+        return arrRecommendation;
     }
 
     /// <summary>
@@ -88,11 +93,33 @@ class MakePrediction
     /// </summary>
     public void CheckPrediction()
     {
-        if (Globals.numOfActualHistoryRow == Globals.historyRow)
+        Debug.Log("CheckPrediction ...");
+
+        if (Globals.numOfActualHistoryRow == (Globals.historyRow + 1))
         {
-            this.CalcAvgOfRecommendationMatrix();
+            var tempArr = this.CalcAvgOfRecommendationMatrix();
             Globals.isPredicted = true;
+            this.updateFirstRowAndRemoveOther(tempArr);
+            Debug.Log("Globals.isPredicted = " + Globals.isPredicted);
         }
+        else
+            Globals.isPredicted = false;
+    }
+
+    private void updateFirstRowAndRemoveOther(float[] avgRow)
+    {
+        Globals.SetRow(Globals.matrixOfRecommendation, 0, avgRow);
+
+        //Init the matrix from 1 to 4.
+        for (int i = 0; i < Globals.numOfAreas; i++)
+        {
+            for (int j = 1; j < Globals.historyRow+1; j++)
+            {
+                Globals.matrixOfRecommendation[j, i] = 0;
+            }
+        }
+
+        Globals.numOfActualHistoryRow = 1;
     }
 
     /// <summary>
@@ -106,20 +133,22 @@ class MakePrediction
             using (StreamWriter writer = new StreamWriter(Globals.AreaRecommendationOfUser))
             {
                 writer.WriteLine("Area Score 0, Area Score 1, Area Score 2, Area Score 3, " +
-                    "Area Score 4, Area Score 5, Area Score 6, Area Score 7, \n");
+                    "Area Score 4, Area Score 5, Area Score 6, Area Score 7, ");
 
-                string str = "";
+                string str;
+
+                Debug.Log("Globals.numOfActualHistoryRow = " + 
+                    Globals.numOfActualHistoryRow);
 
                 for (int i = 0; i < Globals.numOfActualHistoryRow; i++)
                 {
+                    str = "";
                     for (int j = 0; j < Globals.numOfAreas; j++)
                     {
                         str += Globals.matrixOfRecommendation[i, j] + ",";
                     }
-                    str += "\n";
+                    writer.WriteLine(str);
                 }
-
-                writer.WriteLine(str);
             }
         }
         catch (Exception e)

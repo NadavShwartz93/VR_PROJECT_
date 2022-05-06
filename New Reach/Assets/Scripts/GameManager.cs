@@ -217,6 +217,7 @@ public class GameManager : MonoBehaviour
         int zMax = (int)Math.Floor((backBoundry + forwardBoundry) / 2.0);
 
         // class number 0 : the bubble x,y,z position will randomly set in all the game area.
+        // TODO: To arrange this switch case according to the GUI.
         switch (this.areaNumber)
         {
             //Left
@@ -284,10 +285,12 @@ public class GameManager : MonoBehaviour
         string lastBubbleState;
         lastBubbleState = xPosition.ToString() + "^" + yPosition.ToString() + "^" + zPosition.ToString();
 
-        if (Globals.numOfActualHistoryRow < Globals.historyRow)
-            KNN.GetInstance().Start();
+
+        if (Globals.isPredicted)
+            BubblePosition.GetInstance().CalculateBubblePosition();
         else
-            ;
+            KNN.GetInstance().Start();
+
 
         // TODO: This method set the x,y,z position of the next bubble.
         ChangeBubblePosition();

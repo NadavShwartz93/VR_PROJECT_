@@ -86,9 +86,10 @@ public class Globals
     /// This variable represent the number of maximum history row in 
     /// 'AreaRecommendationOfUser.csv' file.
     /// </summary>
-    public const int historyRow = 3;
+    public const int historyRow = 4;
     /// <summary>
     /// This matrix save the recommendation from 'AreaRecommendationOfUser.csv' file.
+    /// The +1 is save for the Avg row.
     /// </summary>
     public static float[,] matrixOfRecommendation = new float[historyRow + 1, numOfAreas];
     /// <summary>
@@ -148,6 +149,11 @@ public class Globals
 
         return Enumerable.Range(startIdx, len).
             Select(x => double.Parse(stringRow[x])).ToArray();
+    }
+
+    public static double[] floatToDouble(float[] decimalArray)
+    {
+        return Array.ConvertAll(decimalArray, x => (double)x); ;
     }
 
     /// <summary>
@@ -220,6 +226,13 @@ public class Globals
                 .ToArray();
     }
 
+    public static T[] SetRow<T>(T[,] matrix, int rowNumber, T[] newRow)
+    {
+        return Enumerable.Range(0, matrix.GetLength(1))
+                .Select(x => matrix[rowNumber, x] = newRow[x])
+                .ToArray();
+    }
+
     public static T[] GetCol<T>(T[,] matrix, int colNumber)
     {
         return Enumerable.Range(0, matrix.GetLength(0))
@@ -235,12 +248,21 @@ public class Globals
         {
             var temp = numOfApperance[i] / (sumOfArray);
 
+            /*if (!isPredicted)
+            {
+                //update the matrix.
+                matrixOfRecommendation[numOfActualHistoryRow, i] = temp;
+            }*/
+
             //update the matrix.
             matrixOfRecommendation[numOfActualHistoryRow, i] = temp;
 
             str += temp;
             str += ",";
         }
+
+        //Update the size of the variable.
+        numOfActualHistoryRow++;
 
         return str;
     }

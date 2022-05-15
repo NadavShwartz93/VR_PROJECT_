@@ -293,7 +293,7 @@ namespace Project_gui
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(103, 16);
             this.label6.TabIndex = 9;
-            this.label6.Text = "33% completed";
+            this.label6.Text = "50% completed";
             // 
             // progressBar1
             // 
@@ -301,7 +301,7 @@ namespace Project_gui
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(100, 23);
             this.progressBar1.TabIndex = 8;
-            this.progressBar1.Value = 33;
+            this.progressBar1.Value = 50;
             // 
             // Patient_Details
             // 

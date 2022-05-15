@@ -646,7 +646,7 @@ namespace Project_gui
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Game_Settings2";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Game Settings";
+            this.Text = "Area Score";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Game_Setting2_FromClosing);
             this.Load += new System.EventHandler(this.Game_Settings2_Load);
             this.tableLayoutPanel1.ResumeLayout(false);

@@ -13,8 +13,8 @@ namespace Project_gui
 {
     public partial class Patient_Details : Form
     {
-        private static Patient_Details P_D= null;
-        private static Game_Settings1 gs1 = null;
+        private static Patient_Details P_D = null;
+        private static Game_Settings2 gs2 = null;
 
         // This string will hold the Patient Details.
         private static string Patient_data = null;
@@ -36,22 +36,18 @@ namespace Project_gui
             P_D = this;
         }
 
-        private void Patient_Detailes_Load(object sender, EventArgs e)
-        {
-        }
-
-        private void id_textBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void continue_button_Click(object sender, EventArgs e)
         {
-            if (gs1 == null)
-                gs1 = Game_Settings1.get_Instance();
+            if (gs2 == null)
+                gs2 = new Game_Settings2();
 
             this.Visible = false;
-            gs1.Show();
+            if (gs2.isIdExistInFile())
+                gs2.initComponents();
+            else
+                gs2.resetComponents();
+
+            gs2.Show();
             insert_data_to_string();
         }
 
@@ -67,7 +63,7 @@ namespace Project_gui
             Patient_data += Treatment_Time_textBox.Text;
         }
 
-        public static string get_Data() 
+        public static string get_Data()
         {
             return Patient_data;
         }
@@ -142,7 +138,7 @@ namespace Project_gui
         private void letters_KeyPress(object sender, KeyPressEventArgs e)
         {
             // Check for the flag being equal to false in the KeyDown event.
-            if(letterEntered == false)
+            if (letterEntered == false)
             {
                 // Stop the character from being entered into the control since it is non-letter.
                 e.Handled = true;
@@ -187,8 +183,8 @@ namespace Project_gui
             // Check for the flag being set in the KeyDown event.
             if (period_number_ == false)
             {
-                    // Stop the character from being entered into the control since it is non-numerical.
-                    e.Handled = true;
+                // Stop the character from being entered into the control since it is non-numerical.
+                e.Handled = true;
             }
         }
 
@@ -208,23 +204,19 @@ namespace Project_gui
                 txt_contain_period = true;
 
             this.numerical_KeyDown(sender, e);
-            if (nonNumberEntered == true && txt_contain_period == false && 
+            if (nonNumberEntered == true && txt_contain_period == false &&
                 (e.KeyCode == Keys.OemPeriod || e.KeyCode == Keys.Decimal))
                 period_number_ = true;
             else if (nonNumberEntered == true && txt_contain_period == true &&
                 (e.KeyCode == Keys.OemPeriod || e.KeyCode == Keys.Decimal))
                 period_number_ = false;
-            else if(nonNumberEntered == false)
+            else if (nonNumberEntered == false)
                 period_number_ = true;
         }
 
         public string get_id_textBox()
         {
             return id_textBox.Text;
-        }
-
-        private void Patient_Details_FromClosing(object sender, FormClosingEventArgs e)
-        {
         }
     }
 }

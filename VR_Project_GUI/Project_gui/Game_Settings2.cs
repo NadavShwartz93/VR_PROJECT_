@@ -10,40 +10,69 @@ namespace Project_gui
         private string Patient_Detailes_File_Name = Globals.file_Name_Patient_Detailes;
         private int[] areaScoreArr;
 
-
         public Game_Settings2()
         {
             InitializeComponent();
             areaScoreArr = new int[Globals.numOfArea];
-            if (this.isIdExistInFile())
-            {
-                tln_Label.Text = areaScoreArr[0].ToString();
-                tln_Track_Bar.Value = areaScoreArr[0];
-
-                trn_Label.Text = areaScoreArr[1].ToString();
-                trn_Track_Bar.Value = areaScoreArr[1];
-
-                bln_Label.Text = areaScoreArr[2].ToString();
-                bln_Track_Bar.Value = areaScoreArr[2];
-
-                brn_Label.Text = areaScoreArr[3].ToString();
-                brn_Track_Bar.Value = areaScoreArr[3];
-
-                tlf_Label.Text = areaScoreArr[4].ToString();
-                tlf_Track_Bar.Value = areaScoreArr[4];
-
-                trf_Label.Text = areaScoreArr[5].ToString();
-                trf_Track_Bar.Value = areaScoreArr[5];
-
-                blf_Label.Text = areaScoreArr[6].ToString();
-                blf_Track_Bar.Value = areaScoreArr[6];
-
-                brf_Label.Text = areaScoreArr[7].ToString();
-                brf_Track_Bar.Value = areaScoreArr[7];
-            }
 
             default_Radio_Button.Checked = true;
             changeComponentStatus(false);
+        }
+
+        public void initComponents()
+        {
+            tln_Label.Text = areaScoreArr[0].ToString();
+            tln_Track_Bar.Value = areaScoreArr[0];
+
+            trn_Label.Text = areaScoreArr[1].ToString();
+            trn_Track_Bar.Value = areaScoreArr[1];
+
+            bln_Label.Text = areaScoreArr[2].ToString();
+            bln_Track_Bar.Value = areaScoreArr[2];
+
+            brn_Label.Text = areaScoreArr[3].ToString();
+            brn_Track_Bar.Value = areaScoreArr[3];
+
+            tlf_Label.Text = areaScoreArr[4].ToString();
+            tlf_Track_Bar.Value = areaScoreArr[4];
+
+            trf_Label.Text = areaScoreArr[5].ToString();
+            trf_Track_Bar.Value = areaScoreArr[5];
+
+            blf_Label.Text = areaScoreArr[6].ToString();
+            blf_Track_Bar.Value = areaScoreArr[6];
+
+            brf_Label.Text = areaScoreArr[7].ToString();
+            brf_Track_Bar.Value = areaScoreArr[7];
+
+        }
+
+        public void resetComponents()
+        {
+            tln_Label.Text = "0";
+            tln_Track_Bar.Value = 0;
+
+            trn_Label.Text = "0";
+            trn_Track_Bar.Value = 0;
+
+            bln_Label.Text = "0";
+            bln_Track_Bar.Value = 0;
+
+            brn_Label.Text = "0";
+            brn_Track_Bar.Value = 0;
+
+            tlf_Label.Text = "0";
+            tlf_Track_Bar.Value = 0;
+
+            trf_Label.Text = "0";
+            trf_Track_Bar.Value = 0;
+
+            blf_Label.Text = "0";
+            blf_Track_Bar.Value = 0;
+
+            brf_Label.Text = "0";
+            brf_Track_Bar.Value = 0;
+
         }
 
         private void changeComponentStatus(bool Status)
@@ -74,7 +103,7 @@ namespace Project_gui
         }
 
         //This method check if the PatientDetails.csv is exist
-        private bool isIdExistInFile()
+        public bool isIdExistInFile()
         {
             //The case PatientDetails.csv does not exist
             if (!File.Exists(Globals.file_Name_Patient_Detailes))
@@ -108,28 +137,6 @@ namespace Project_gui
                     flag = false;
             }
             return flag;
-        }
-
-
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label10_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void progressBar1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label9_Click(object sender, EventArgs e)
-        {
-
         }
 
         private string addAreaSocreDataToCSV()
@@ -177,45 +184,12 @@ namespace Project_gui
 
             Game_Settings1.get_Instance().Close();
         }
+
         // Go back to the main Game Settings Screen
         private void click_back_button(object sender, EventArgs e)
         {
             this.Visible = false;
-            Game_Settings1.get_Instance().Visible = true;
-
-        }
-
-
-        private void read_From_Csv_File()
-        {
-            String line;
-            try
-            {
-                //Pass the file path and file name to the StreamReader constructor
-                StreamReader sr = new StreamReader(Patient_Results_File_Name);
-                //Read the first line of text
-                line = sr.ReadLine();
-                //Continue to read until you reach end of file
-                while (line != null)
-                {
-                    //write the line to console window
-                    Console.WriteLine(line);
-                    //Read the next line
-                    line = sr.ReadLine();
-                }
-                //close the file
-                sr.Close();
-                Console.ReadLine();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception: " + e.Message);
-            }
-            finally
-            {
-                Console.WriteLine("Executing finally block.");
-            }
-
+            Patient_Details.get_Instance().Visible = true;
         }
 
         private void write_To_Csv_File(string data_to_write, string fileName)
@@ -311,11 +285,6 @@ namespace Project_gui
         private void brf_Scroll_bar(object sender, EventArgs e)
         {
             brf_Label.Text = brf_Track_Bar.Value.ToString();
-        }
-
-        private void Game_Settings2_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void Adjust_RadioButton_Click(object sender, EventArgs e)

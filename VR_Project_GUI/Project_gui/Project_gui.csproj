@@ -85,7 +85,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validation.cs" />
     <EmbeddedResource Include="Game_Settings2.resx">
       <DependentUpon>Game_Settings2.cs</DependentUpon>
     </EmbeddedResource>

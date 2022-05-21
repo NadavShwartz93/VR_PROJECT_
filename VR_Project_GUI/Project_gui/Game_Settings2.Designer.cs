@@ -270,7 +270,6 @@ namespace Project_gui
             this.label1.Size = new System.Drawing.Size(169, 40);
             this.label1.TabIndex = 20;
             this.label1.Text = "Top Left Far";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label6
             // 
@@ -588,7 +587,6 @@ namespace Project_gui
             this.label9.Size = new System.Drawing.Size(114, 16);
             this.label9.TabIndex = 8;
             this.label9.Text = "100% completed!";
-            this.label9.Click += new System.EventHandler(this.label9_Click);
             // 
             // progressBar1
             // 
@@ -597,7 +595,6 @@ namespace Project_gui
             this.progressBar1.Size = new System.Drawing.Size(100, 23);
             this.progressBar1.TabIndex = 7;
             this.progressBar1.Value = 100;
-            this.progressBar1.Click += new System.EventHandler(this.progressBar1_Click);
             // 
             // label10
             // 
@@ -608,7 +605,6 @@ namespace Project_gui
             this.label10.Size = new System.Drawing.Size(166, 34);
             this.label10.TabIndex = 6;
             this.label10.Text = "Area Score";
-            this.label10.Click += new System.EventHandler(this.label10_Click);
             // 
             // button1
             // 
@@ -648,7 +644,6 @@ namespace Project_gui
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Area Score";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Game_Setting2_FromClosing);
-            this.Load += new System.EventHandler(this.Game_Settings2_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);

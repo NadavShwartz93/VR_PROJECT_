@@ -319,8 +319,6 @@ namespace Project_gui
             this.Name = "Patient_Details";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Patient Details";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Patient_Details_FromClosing);
-            this.Load += new System.EventHandler(this.Patient_Detailes_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

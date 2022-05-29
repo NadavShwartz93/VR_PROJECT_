@@ -31,25 +31,31 @@ class MakePrediction
     /// </summary>
     public void ReadAreaRecommendationFile()
     {
-        using (var reader = new StreamReader(Globals.AreaRecommendationOfUser))
+        if (File.Exists(Globals.AreaRecommendationOfUser))
         {
-            //Don't need the first line.
-            var line = reader.ReadLine();
-
-            int row = 0;
-            while (!reader.EndOfStream)
+            using (var reader = new StreamReader(Globals.AreaRecommendationOfUser))
             {
-                //Update the size of the variable.
-                Globals.numOfActualHistoryRow++;
+                //Don't need the first line.
+                var line = reader.ReadLine();
 
-                var values = reader.ReadLine().Split(',');
-                for (int col = 0; col < Globals.numOfAreas; col++)
+                int row = 0;
+                while (!reader.EndOfStream)
                 {
-                    Globals.matrixOfRecommendation[row, col] = float.Parse(values[col]);
+                    //Update the size of the variable.
+                    Globals.numOfActualHistoryRow++;
+
+                    var values = reader.ReadLine().Split(',');
+                    for (int col = 0; col < Globals.numOfAreas; col++)
+                    {
+                        Globals.matrixOfRecommendation[row, col] = float.Parse(values[col]);
+                    }
+                    row++;
                 }
-                row++;
             }
         }
+
+        Debug.Log("In the beginning, the number of row in the " +
+    "AreaRecommendationOfUser.csv is = " + Globals.numOfActualHistoryRow);
     }
 
     /// <summary>
@@ -62,7 +68,7 @@ class MakePrediction
     {
         for (int i = 0; i < Globals.numOfAreas; i++)
         {
-            Globals.matrixOfRecommendation[Globals.numOfActualHistoryRow, i] = 
+            Globals.matrixOfRecommendation[Globals.numOfActualHistoryRow, i] =
                 guiRecommendation[i];
         }
         Globals.numOfActualHistoryRow++;
@@ -93,7 +99,7 @@ class MakePrediction
     /// </summary>
     public void CheckPrediction()
     {
-        Debug.Log("CheckPrediction ...");
+        Debug.Log("CheckPrediction: Check if the prediction table is full.");
 
         if (Globals.numOfActualHistoryRow == (Globals.historyRow + 1))
         {
@@ -113,7 +119,7 @@ class MakePrediction
         //Init the matrix from 1 to 4.
         for (int i = 0; i < Globals.numOfAreas; i++)
         {
-            for (int j = 1; j < Globals.historyRow+1; j++)
+            for (int j = 1; j < Globals.historyRow + 1; j++)
             {
                 Globals.matrixOfRecommendation[j, i] = 0;
             }
@@ -137,7 +143,7 @@ class MakePrediction
 
                 string str;
 
-                Debug.Log("Globals.numOfActualHistoryRow = " + 
+                Debug.Log("Globals.numOfActualHistoryRow = " +
                     Globals.numOfActualHistoryRow);
 
                 for (int i = 0; i < Globals.numOfActualHistoryRow; i++)
@@ -155,5 +161,45 @@ class MakePrediction
         {
             Debug.Log("Exception in MakePrediction.WriteToAreaRecommendationOfUser(): " + e.Message);
         }
+    }
+
+
+    /// <summary>
+    /// This method calculate the system recommendation 
+    /// that have been produce from this game round.
+    /// </summary>
+    /// <returns></returns>
+    public string calculateSystemRecommendation()
+    {
+        string str = "";
+        float sumOfArray = Globals.numOfApperance.Sum();
+
+        if (sumOfArray == 0)
+        {
+            Enumerable.Range(0, Globals.numOfAreas)
+                .Select(x =>
+                Globals.matrixOfRecommendation[Globals.numOfActualHistoryRow, x] = 0)
+                .ToArray();
+
+            str = "0,0,0,0,0,0,0,0,";
+        }
+        else
+        {
+            for (int i = 0; i < Globals.numOfAreas; i++)
+            {
+                var temp = Globals.numOfApperance[i] / (sumOfArray);
+
+                //update the matrix.
+                Globals.matrixOfRecommendation[Globals.numOfActualHistoryRow, i] = temp;
+
+                str += temp;
+                str += ",";
+            }
+        }
+
+        //Update the size of the variable.
+        Globals.numOfActualHistoryRow++;
+
+        return str;
     }
 }

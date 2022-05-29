@@ -239,31 +239,4 @@ public class Globals
                 .Select(x => matrix[x, colNumber])
                 .ToArray();
     }
-
-    public static string concatAreaScore()
-    {
-        string str = "";
-        float sumOfArray = numOfApperance.Sum();
-        for (int i = 0; i < numOfAreas; i++)
-        {
-            var temp = numOfApperance[i] / (sumOfArray);
-
-            /*if (!isPredicted)
-            {
-                //update the matrix.
-                matrixOfRecommendation[numOfActualHistoryRow, i] = temp;
-            }*/
-
-            //update the matrix.
-            matrixOfRecommendation[numOfActualHistoryRow, i] = temp;
-
-            str += temp;
-            str += ",";
-        }
-
-        //Update the size of the variable.
-        numOfActualHistoryRow++;
-
-        return str;
-    }
 }

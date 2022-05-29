@@ -285,6 +285,7 @@ public class GameManager : MonoBehaviour
         string lastBubbleState;
         lastBubbleState = xPosition.ToString() + "^" + yPosition.ToString() + "^" + zPosition.ToString();
 
+        Debug.Log("Inside CalcNextBubbleLocation method.");
 
         if (Globals.isPredicted)
             BubblePosition.GetInstance().CalculateBubblePosition();

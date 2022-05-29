@@ -75,6 +75,8 @@ public class CSVReader : MonoBehaviour
 
         #region Gal_Nadav_Code_Blocks
 
+        Debug.Log("Read the AreaRecommendationOfUser.csv file.");
+
         MakePrediction.GetInstance().ReadAreaRecommendationFile();
 
         MakePrediction.GetInstance().AppendGuiRecommendationToMatrix(guiRecommendation);
@@ -164,6 +166,11 @@ public class CSVReader : MonoBehaviour
         Patient_data += "Standing, Treatment Time (sec), Area Score 0, Area Score 1, Area Score 2, Area Score 3, Area Score 4, " +
             "Area Score 5, Area Score 6, Area Score 7, \n";
 
+        //Get the system recommendation (the areas "weight") as string,
+        //and after that write it to the PatientDetails.csv file.
+        var dataLineToMatrixOfRecommendation = 
+            MakePrediction.GetInstance().calculateSystemRecommendation();
+
         try
         {
             using (StreamWriter writer = new StreamWriter(Globals.PatientDetailsFilePath))
@@ -175,7 +182,7 @@ public class CSVReader : MonoBehaviour
                 }
 
 
-                Patient_data += Globals.concatAreaScore();
+                Patient_data += dataLineToMatrixOfRecommendation;
 
                 //Write The data to the .csv file.
                 writer.WriteLine(Patient_data);

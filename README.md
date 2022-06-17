@@ -1,6 +1,6 @@
 # VR_PROJECT_
 
-[The Video of the Final System](https://clipchamp.com/watch/gxmQIn5GXE0 "HIHIHI")
+## [The Video of the Final System](https://clipchamp.com/watch/gxmQIn5GXE0 )
 
 ## `The Project Flow Chart - Recommendation System(RS) Architecture`
 ![image](https://user-images.githubusercontent.com/62426094/174271782-20da3d7a-1b3a-47d7-bd6e-4413395f4cdb.png)
